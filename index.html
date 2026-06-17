@@ -77,7 +77,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
-        // DIRECCIÓN OFICIAL CORREGIDA PARA GOOGLE MAPS
+        // DIRECCIÓN OFICIAL DEL RESTAURANTE JOTA JOTA
         const DESTINO_RESTAURANTE = "Restaurante Jota Jota, 5301 Avenida 5 de Septiembre, Cienfuegos, Cuba";
 
         let baseDatosDirecciones = [];
@@ -86,13 +86,13 @@
 
         const REPARTIDORES = ["5350980360", "5363401398"]; 
 
-        // Cargar el archivo CSV
+        // Cargar el archivo CSV (Línea corregida y limpia)
         Papa.parse("direcciones.csv", {
             download: true,
             header: true,
             skipEmptyLines: true,
             complete: function(resultados) {
-                baseDatosDirecciones = $.data = resultados.data;
+                baseDatosDirecciones = resultados.data;
             }
         });
 
@@ -107,7 +107,7 @@
             return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
         }
 
-        // --- ENLACE DIRECTO DE NAVEGACIÓN A LA DIRECCIÓN CORREGIDA ---
+        // --- ENLACE DIRECTO DE NAVEGACIÓN A GOOGLE MAPS ---
         function abrirRutaGoogleMaps() {
             if (!navigator.geolocation) {
                 alert("Tu dispositivo no soporta geolocalización. Abriendo mapa general de Jota Jota...");
@@ -148,6 +148,7 @@
                 return;
             }
 
+            // Normalizar abreviaturas típicas
             if (textoBusqueda === "av" || textoBusqueda.startsWith("av ")) {
                 textoBusqueda = textoBusqueda.replace("av", "avenida");
             } else if (textoBusqueda === "ave" || textoBusqueda.startsWith("ave ")) {
@@ -161,6 +162,7 @@
                 return dirCompleta.includes(textoBusqueda);
             });
 
+            // Ordenar para dar prioridad a lo que empieza por el texto buscado
             coincidencias.sort((a, b) => {
                 const dirA = nombreSinAcentos(obtenerValorColumna(a, ['direccion_completa', 'dirección_completa']));
                 const dirB = nombreSinAcentos(obtenerValorColumna(b, ['direccion_completa', 'dirección_completa']));
@@ -175,50 +177,4 @@
 
             coincidencias = coincidencias.slice(0, 5);
 
-            if (coincidencias.length > 0) {
-                listaSugerencias.classList.remove('hidden');
-                coincidencias.forEach(fila => {
-                    const dirCompletaOriginal = obtenerValorColumna(fila, ['direccion_completa', 'dirección_completa']);
-                    const precioOriginal = obtenerValorColumna(fila, ['precio']);
-                    const zonaOriginal = obtenerValorColumna(fila, ['zona']) || "General";
-
-                    const botonOpcion = document.createElement('button');
-                    botonOpcion.type = "button";
-                    botonOpcion.className = "w-full text-left p-3 hover:bg-slate-800 transition-colors border-b border-slate-800 last:border-0 block focus:outline-none cursor-pointer";
-                    
-                    botonOpcion.innerHTML = `
-                        <div class="font-medium text-slate-200">${dirCompletaOriginal}</div>
-                        <div class="text-xs text-emerald-400 mt-0.5 font-semibold">Precio: ${precioOriginal} CUP • Zona: ${zonaOriginal}</div>
-                    `;
-
-                    botonOpcion.onclick = function() {
-                        direccionSeleccionada = dirCompletaOriginal;
-                        precioSeleccionado = `${precioOriginal} CUP`;
-                        
-                        precioTexto.innerText = precioSeleccionado;
-                        detallesDireccion.innerText = direccionSeleccionada;
-                        zonaTexto.innerText = zonaOriginal;
-                        
-                        resultadoTarifa.classList.remove('hidden');
-                        listaSugerencias.classList.add('hidden');
-                        inputBuscar.value = direccionSeleccionada;
-                    };
-                    
-                    listaSugerencias.appendChild(botonOpcion);
-                });
-            } else {
-                listaSugerencias.classList.add('hidden');
-            }
-        });
-
-        // --- ENVIAR PEDIDO POR WHATSAPP ---
-        function enviarPedidoWhatsApp() {
-            if (!direccionSeleccionada) return;
-            const numeroElegido = REPARTIDORES[Math.floor(Math.random() * REPARTIDORES.length)];
-            
-            const mensaje = `¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *${direccionSeleccionada}*\n\nTarifa calculada: *${precioSeleccionado}*`;
-            window.open(`https://wa.me/${numeroElegido}?text=${encodeURIComponent(mensaje)}`, '_blank');
-        }
-    </script>
-</body>
-</html>
+            if (coinc
