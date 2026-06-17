@@ -22,7 +22,6 @@
         </header>
 
         <main class="p-5 flex-1 space-y-6">
-
             <div class="bg-slate-800/90 border border-slate-700 p-5 rounded-2xl shadow-xl space-y-3">
                 <div class="flex items-center space-x-2">
                     <span>🗺️</span>
@@ -38,12 +37,7 @@
                     <span class="text-xl">🔍</span>
                     <h2 class="font-bold text-base text-white">Consulta tu dirección</h2>
                 </div>
-
-                <div class="space-y-2">
-                    <input type="text" id="buscarDireccion" placeholder="Escribe tu calle o avenida..."
-                           class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm shadow-inner">
-                </div>
-
+                <input type="text" id="buscarDireccion" placeholder="Ej: Calle 7, Avenida 62..." class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm shadow-inner">
                 <div id="listaSugerencias" class="hidden max-h-56 overflow-y-auto bg-slate-950 border border-slate-700 rounded-xl divide-y divide-slate-800 text-sm shadow-2xl"></div>
 
                 <div id="resultadoTarifa" class="hidden bg-gradient-to-br from-blue-950/50 to-slate-900/50 border border-blue-500/30 p-4 rounded-xl space-y-4">
@@ -54,6 +48,7 @@
                     <div class="text-xs text-slate-300 space-y-2 pt-2 border-t border-slate-800">
                         <p class="font-bold text-slate-200">📌 Dirección de Entrega:</p>
                         <p id="detallesDireccion" class="italic text-slate-300 bg-slate-950/60 p-2 rounded border border-slate-800"></p>
+                        <p class="pt-1">📍 <span class="font-semibold text-slate-400">Zona de Cienfuegos:</span> <span id="zonaTexto" class="text-blue-400 font-bold"></span></p>
                     </div>
                     <button onclick="enviarPedidoWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer text-sm tracking-wide uppercase mt-2">
                         <span>💬</span> Solicitar Domicilio Ahora
@@ -61,17 +56,22 @@
                 </div>
             </section>
         </main>
+
+        <footer class="p-4 text-center text-[10px] text-slate-600 border-t border-slate-800 bg-slate-950/50">
+            © 2026 Cienfuegos Express.
+        </footer>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
-        const DESTINO_RESTAURANTE = "Restaurante Jota Jota, Cienfuegos, Cuba";
+        const DESTINO_RESTAURANTE = "Restaurante Jota Jota, 5301 Avenida 5 de Septiembre, Cienfuegos, Cuba";
         const TEL_NORMAL = "5350980360";
         const TEL_DOMINGO = "5363401398";
 
         let baseDatosDirecciones = [];
         let direccionSeleccionada = "";
         let precioSeleccionado = "";
+        let zonaSeleccionada = "";
 
         Papa.parse("direcciones.csv", {
             download: true, header: false, skipEmptyLines: true,
@@ -89,31 +89,40 @@
         inputBuscar.addEventListener("input", function() {
             var busqueda = sinAcentos(inputBuscar.value);
             listaSugerencias.innerHTML = "";
+            if (busqueda.length < 2) { listaSugerencias.classList.add("hidden"); return; }
             
-            if (busqueda.length < 2) { 
-                listaSugerencias.classList.add("hidden"); 
-                return; 
-            }
-            
-            var coincidencias = baseDatosDirecciones.filter(function(fila) { 
-                return fila[6] && sinAcentos(fila[6]).includes(busqueda); 
-            }).sort(function(a, b) {
-                var aStarts = sinAcentos(a[6]).startsWith(busqueda);
-                var bStarts = sinAcentos(b[6]).startsWith(busqueda);
-                return aStarts === bStarts ? 0 : aStarts ? -1 : 1;
-            });
+            var coincidencias = baseDatosDirecciones.filter(function(fila) { return fila[6] && sinAcentos(fila[6]).includes(busqueda); })
+            .sort((a,b) => sinAcentos(a[6]).startsWith(busqueda) ? -1 : 1);
             
             if (coincidencias.length > 0) {
                 listaSugerencias.classList.remove("hidden");
-                coincidencias.slice(0, 6).forEach(function(fila) {
+                coincidencias.slice(0, 5).forEach(function(fila) {
                     var btn = document.createElement("button");
-                    btn.className = "w-full text-left p-3 hover:bg-slate-800 border-b border-slate-800 text-white";
-                    btn.innerHTML = '<div>' + fila[6] + '</div><div class="text-xs text-emerald-400">Precio: ' + fila[7] + ' CUP</div>';
+                    btn.className = "w-full text-left p-3 hover:bg-slate-800 border-b border-slate-800";
+                    btn.innerHTML = '<div class="font-medium text-slate-200">' + fila[6] + '</div><div class="text-xs text-emerald-400 mt-0.5 font-semibold">Precio: ' + fila[7] + ' CUP • Zona: ' + (fila[8]||"") + '</div>';
                     btn.onclick = function() {
                         direccionSeleccionada = fila[6];
                         precioSeleccionado = fila[7] + " CUP";
+                        zonaSeleccionada = fila[8] || "General";
                         document.getElementById("precioTexto").innerText = precioSeleccionado;
                         document.getElementById("detallesDireccion").innerText = direccionSeleccionada;
+                        document.getElementById("zonaTexto").innerText = zonaSeleccionada;
                         resultadoTarifa.classList.remove("hidden");
                         listaSugerencias.classList.add("hidden");
                         inputBuscar.value = fila[6];
+                    };
+                    listaSugerencias.appendChild(btn);
+                });
+            } else { listaSugerencias.classList.add("hidden"); }
+        });
+
+        function enviarPedidoWhatsApp() {
+            if (!direccionSeleccionada) return;
+            const esDomingo = new Date().getDay() === 0;
+            const numero = esDomingo ? TEL_DOMINGO : TEL_NORMAL;
+            var mensaje = "¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *" + direccionSeleccionada + "*\n\nTarifa calculada: *" + precioSeleccionado + "*";
+            window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje), "_blank");
+        }
+    </script>
+</body>
+</html>
