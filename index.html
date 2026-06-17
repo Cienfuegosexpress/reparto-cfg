@@ -18,66 +18,114 @@
         
         <header class="bg-gradient-to-b from-blue-700 to-blue-800 p-6 flex flex-col items-center text-center border-b border-blue-600 shadow-lg relative">
             <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center overflow-hidden border-4 border-slate-950 shadow-xl mb-3">
-                <img src="logo.png" alt="Cienfuegos Express" class="w-full h-full object-cover" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2972/2972185.png'">
+                <img src="logo.png" alt="Cienfuegos Express" class="w-full h-full object-cover" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2972/2972185.png';">
             </div>
             <h1 class="text-2xl font-black tracking-wide text-white uppercase">Cienfuegos Express</h1>
             <p class="text-xs text-blue-200 font-medium mt-1">Logística de reparto local rápido</p>
         </header>
 
         <main class="p-5 flex-1 space-y-6">
-            
-            <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-4 shadow-inner">
-                <div class="flex items-center space-x-2 text-blue-400 font-bold mb-2">
+
+            <div class="bg-slate-800/90 border border-slate-700 p-5 rounded-2xl shadow-xl space-y-3">
+                <div class="flex items-center space-x-2 text-blue-400 font-bold">
                     <span>📍</span>
-                    <h2>Tu distancia a Jota Jota</h2>
+                    <h2 class="font-bold text-base text-white">Tu distancia a Jota Jota</h2>
                 </div>
-                <p class="text-xs text-slate-400 mb-3">Calcula la distancia exacta desde tu ubicación actual para entender tu tarifa de envío.</p>
+                <p class="text-xs text-slate-400">Calcula la distancia exacta desde tu ubicación actual para entender tu tarifa de envío.</p>
                 
-                <button id="btn-distancia" onclick="calcularRuta()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200 shadow-md text-sm cursor-pointer">
+                <button id="btn-distancia" onclick="calcularRuta()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl transition duration-200 shadow-md text-sm cursor-pointer uppercase tracking-wider">
                     Calcular ruta y distancia
                 </button>
 
-                <div id="resultado-distancia" class="text-center font-bold text-lg text-emerald-400 mt-3 hidden"></div>
+                <div id="resultado-distancia" class="text-center font-black text-lg text-emerald-400 mt-3 hidden"></div>
                 
-                <div id="mapa" class="border border-slate-700 shadow-md"></div>
+                <div id="mapa" class="border border-slate-700 shadow-inner"></div>
                 
-                <p class="text-[10px] text-slate-500 text-center mt-2 italic">
+                <p class="text-[10px] text-slate-500 text-center italic pt-1">
                     * Nota: Puede haber un margen de error de ±0.2 km con respecto a la distancia real debido a la precisión del GPS de tu dispositivo.
                 </p>
             </div>
 
-            <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-4 shadow-inner space-y-4">
-                <div class="flex items-center space-x-2 text-blue-400 font-bold">
-                    <span>📍</span>
-                    <h2>Consulta tu dirección</h2>
-                </div>
-                
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Escribe tu calle o avenida:</label>
-                    <input type="text" id="buscador" oninput="buscarDireccion()" placeholder="Ej: avenida 62..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition text-sm">
+            <section class="bg-slate-800/90 p-5 rounded-2xl border border-slate-700 space-y-4 shadow-xl">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">🔍</span>
+                    <h2 class="font-bold text-base text-white">Consulta tu dirección</h2>
                 </div>
 
-                <div id="lista-resultados" class="max-h-60 overflow-y-auto rounded-xl border border-slate-700 bg-slate-950 divide-y divide-slate-800 hidden"></div>
-            </div>
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Escribe tu calle o avenida:</label>
+                    <input type="text" id="buscarDireccion" placeholder="Ej: Avenida 2, Calle 35..." 
+                           class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm shadow-inner">
+                </div>
+
+                <div id="listaSugerencias" class="hidden max-h-56 overflow-y-auto bg-slate-950 border border-slate-700 rounded-xl divide-y divide-slate-800 text-sm shadow-2xl"></div>
+
+                <div id="resultadoTarifa" class="hidden bg-gradient-to-br from-blue-950/50 to-slate-900/50 border border-blue-500/30 p-4 rounded-xl space-y-4">
+                    <div class="flex justify-between items-baseline">
+                        <span class="text-xs font-semibold text-blue-400 uppercase">Costo del Domicilio:</span>
+                        <span id="precioTexto" class="font-black text-2xl text-blue-400"></span>
+                    </div>
+                    
+                    <div class="text-xs text-slate-300 space-y-2 pt-2 border-t border-slate-800">
+                        <p class="font-bold text-slate-200">📌 Dirección de Entrega:</p>
+                        <p id="detallesDireccion" class="italic text-slate-300 bg-slate-950/60 p-2 rounded border border-slate-800"></p>
+                        <p class="pt-1">📍 <span class="font-semibold text-slate-400">Zona de Cienfuegos:</span> <span id="zonaTexto" class="text-blue-400 font-bold"></span></p>
+                    </div>
+
+                    <button onclick="enviarPedidoWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer text-sm tracking-wide uppercase mt-2">
+                        <span>💬</span> Solicitar Domicilio Ahora
+                    </button>
+                </div>
+            </section>
 
         </main>
 
-        <footer class="p-4 text-center border-t border-slate-800 bg-slate-950/50">
-            <p class="text-[11px] text-slate-500">&copy; 2026 Cienfuegos Express. Optimizado para el ahorro de datos móviles.</p>
+        <footer class="p-4 text-center text-[10px] text-slate-600 border-t border-slate-800 bg-slate-950/50">
+            &copy; 2026 Cienfuegos Express. Optimizado para el ahorro de datos móviles.
         </footer>
+
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
-        // Coordenadas exactas del Restaurante Jota Jota en Cienfuegos, Cuba
+        // Coordenadas exactas de Jota Jota en Cienfuegos
         const JOTA_JOTA_LAT = 22.1462; 
         const JOTA_JOTA_LNG = -80.4515;
         let mapaLeaflet = null;
         let marcadorUsuario = null;
         let lineaRuta = null;
 
-        // Función para calcular distancia en línea recta (Haversine)
+        let baseDatosDirecciones = [];
+        let direccionSeleccionada = "";
+        let precioSeleccionado = "";
+
+        // Números rotativos con prefijo +53
+        const REPARTIDORES = ["5350980360", "5363401398"]; 
+
+        // Carga correcta del CSV leyendo tus columnas reales
+        Papa.parse("direcciones.csv", {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function(resultados) {
+                baseDatosDirecciones = resultados.data;
+            }
+        });
+
+        function obtenerValorColumna(fila, nombresPosibles) {
+            for (let nombre of nombresPosibles) {
+                if (fila[nombre] !== undefined) return fila[nombre].trim();
+            }
+            return "";
+        }
+
+        function nombreSinAcentos(texto) {
+            return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+        }
+
+        // --- LÓGICA DE GEOLOCALIZACIÓN ---
         function obtenerDistanciaKM(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Radio de la Tierra en KM
+            const R = 6371; 
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
             const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -92,7 +140,7 @@
             const mapaDiv = document.getElementById('mapa');
 
             if (!navigator.geolocation) {
-                alert("Tu navegador no soporta geolocalización.");
+                alert("Tu dispositivo no soporta localización.");
                 return;
             }
 
@@ -102,71 +150,94 @@
                 const userLat = position.coords.latitude;
                 const userLng = position.coords.longitude;
 
-                // Calcular los kilómetros exactos
                 const distancia = obtenerDistanciaKM(userLat, userLng, JOTA_JOTA_LAT, JOTA_JOTA_LNG);
                 
-                // Mostrar el texto del resultado
                 resDiv.innerText = `¡Estás a ${distancia.toFixed(2)} km de Jota Jota!`;
                 resDiv.classList.remove('hidden');
                 mapaDiv.style.display = 'block';
                 btn.innerText = "Calcular ruta y distancia";
 
-                // Inicializar o actualizar el mini mapa visual
                 if (!mapaLeaflet) {
                     mapaLeaflet = L.map('mapa', { zoomControl: false }).setView([JOTA_JOTA_LAT, JOTA_JOTA_LNG], 14);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap'
-                    }).addTo(mapaLeaflet);
-
-                    // Marcador fijo en Jota Jota
-                    L.marker([JOTA_JOTA_LAT, JOTA_JOTA_LNG]).addTo(mapaLeaflet).bindPopup('Restaurante Jota Jota').openPopup();
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapaLeaflet);
+                    L.marker([JOTA_JOTA_LAT, JOTA_JOTA_LNG]).addTo(mapaLeaflet).bindPopup('Jota Jota').openPopup();
                 }
 
-                // Si ya había marcadores o rutas anteriores, los borramos para actualizar
                 if (marcadorUsuario) mapaLeaflet.removeLayer(marcadorUsuario);
                 if (lineaRuta) mapaLeaflet.removeLayer(lineaRuta);
 
-                // Colocar la posición del cliente en el mapa
                 marcadorUsuario = L.marker([userLat, userLng]).addTo(mapaLeaflet).bindPopup('Tu ubicación');
-                
-                // Dibujar la línea de la ruta entre el cliente y el restaurante
                 lineaRuta = L.polyline([[userLat, userLng], [JOTA_JOTA_LAT, JOTA_JOTA_LNG]], { color: '#3b82f6', weight: 4 }).addTo(mapaLeaflet);
                 
-                // Ajustar el mapa automáticamente para que se vean ambos puntos a la vez
                 mapaLeaflet.fitBounds(lineaRuta.getBounds(), { padding: [20, 20] });
 
+                setTimeout(() => { mapaLeaflet.invalidateSize(); }, 200);
+
             }, function(error) {
-                alert("No se pudo acceder a tu ubicación. Por favor, activa el GPS de tu teléfono.");
+                alert("Por favor, activa el GPS de tu teléfono para calcular la distancia.");
                 btn.innerText = "Calcular ruta y distancia";
             });
         }
 
-        // --- CÓDIGO DE TU BUSCADOR ANTERIOR (Mantenemos tu lógica intacta) ---
-        let baseDatos = [];
-        fetch('direcciones.csv')
-            .then(res => res.text())
-            .then(data => {
-                const filas = data.split('\n').slice(1);
-                baseDatos = filas.map(f => {
-                    const c = f.split(',');
-                    return { completa: c[6], precio: c[7], zona: c[8] };
-                }).filter(d => d.completa);
+        // --- LÓGICA DEL BUSCADOR PREDICTIVO ---
+        const inputBuscar = document.getElementById('buscarDireccion');
+        const listaSugerencias = document.getElementById('listaSugerencias');
+        const resultadoTarifa = document.getElementById('resultadoTarifa');
+        const precioTexto = document.getElementById('precioTexto');
+        const detallesDireccion = document.getElementById('detallesDireccion');
+        const zonaTexto = document.getElementById('zonaTexto');
+
+        inputBuscar.addEventListener('input', (e) => {
+            const textoBusqueda = nombreSinAcentos(e.target.value);
+            listaSugerencias.innerHTML = "";
+            
+            if (textoBusqueda.length < 2) {
+                listaSugerencias.classList.add('hidden');
+                return;
+            }
+
+            let coincidencias = baseDatosDirecciones.filter(fila => {
+                const dirCompleta = nombreSinAcentos(obtenerValorColumna(fila, ['direccion_completa', 'dirección_completa']));
+                return dirCompleta.includes(textoBusqueda);
             });
 
-        function buscarDireccion() {
-            const q = document.getElementById('buscador').value.toLowerCase().trim();
-            const lista = document.getElementById('lista-resultados');
-            lista.innerHTML = '';
-            if(!q) { lista.classList.add('hidden'); return; }
-            const filtrados = baseDatos.filter(d => d.completa.toLowerCase().includes(q)).slice(0, 5);
-            if(filtrados.length === 0) { lista.classList.add('hidden'); return; }
-            filtrados.forEach(d => {
-                const item = document.createElement('div');
-                item.className = 'p-3 hover:bg-slate-900 cursor-pointer transition text-sm';
-                item.innerHTML = `<div class="font-medium text-slate-200">${d.completa}</div><div class="text-xs text-emerald-400 mt-0.5">Precio: ${d.precio} CUP • Zona: ${d.zona}</div>`;
-                lista.appendChild(item);
-            });
-            lista.classList.remove('hidden');
+            coincidencias = coincidencias.slice(0, 5);
+
+            if (coincidencias.length > 0) {
+                listaSugerencias.classList.remove('hidden');
+                coincidencias.forEach(fila => {
+                    const dirCompletaOriginal = obtenerValorColumna(fila, ['direccion_completa', 'dirección_completa']);
+                    const precioOriginal = obtenerValorColumna(fila, ['precio']);
+                    const zonaOriginal = obtenerValorColumna(fila, ['zona']) || "General";
+
+                    const item = document.createElement('div');
+                    item.className = "p-3 hover:bg-slate-800 cursor-pointer transition-colors text-slate-200 border-b border-slate-800 last:border-0";
+                    item.innerText = dirCompletaOriginal;
+                    
+                    item.addEventListener('click', () => {
+                        direccionSeleccionada = dirCompletaOriginal;
+                        precioSeleccionado = `${precioOriginal} CUP`;
+                        
+                        precioTexto.innerText = precioSeleccionado;
+                        detallesDireccion.innerText = direccionSeleccionada;
+                        zonaTexto.innerText = zonaOriginal;
+                        
+                        resultadoTarifa.classList.remove('hidden');
+                        listaSugerencias.classList.add('hidden');
+                        inputBuscar.value = dirCompletaOriginal;
+                    });
+                    listaSugerencias.appendChild(item);
+                });
+            } else {
+                listaSugerencias.classList.add('hidden');
+            }
+        });
+
+        function enviarPedidoWhatsApp() {
+            if (!direccionSeleccionada) return;
+            const numeroElegido = REPARTIDORES[Math.floor(Math.random() * REPARTIDORES.length)];
+            const mensaje = `¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *${direccionSeleccionada}*\n\nTarifa calculada: *${precioSeleccionado}*`;
+            window.open(`https://wa.me/${numeroElegido}?text=${encodeURIComponent(mensaje)}`, '_blank');
         }
     </script>
 </body>
