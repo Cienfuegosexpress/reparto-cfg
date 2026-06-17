@@ -1,135 +1,92 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    <script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cienfuegos Express - Tarifas y Pedidos</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4">
 
-        const DESTINO_RESTAURANTE = "Restaurante Jota Jota, 5301 Avenida 5 de Septiembre, Cienfuegos, Cuba";
+    <div class="max-w-md w-full bg-slate-900 rounded-3xl shadow-2xl border border-slate-800 flex flex-col overflow-hidden">
         
-        // REPARTIDORES: [0] = Número de siempre, [1] = Número de domingos
+        <header class="bg-blue-800 p-6 flex flex-col items-center text-center border-b border-blue-700">
+            <h1 class="text-2xl font-black text-white uppercase">Cienfuegos Express</h1>
+            <p class="text-xs text-blue-200">Logística de reparto local</p>
+        </header>
+
+        <main class="p-5 space-y-6">
+            <button onclick="abrirRutaGoogleMaps()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl">🚀 Ver ruta en Google Maps</button>
+            
+            <section class="space-y-4">
+                <input type="text" id="buscarDireccion" placeholder="Escribe tu dirección..." class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white">
+                <div id="listaSugerencias" class="hidden bg-slate-950 border border-slate-700 rounded-xl"></div>
+                
+                <div id="resultadoTarifa" class="hidden bg-blue-950/30 p-4 rounded-xl border border-blue-500/30">
+                    <p id="precioTexto" class="text-2xl font-black text-blue-400"></p>
+                    <p id="detallesDireccion" class="text-sm italic"></p>
+                    <button onclick="enviarPedidoWhatsApp()" class="w-full mt-4 bg-emerald-600 text-white font-bold py-3 rounded-xl">💬 Solicitar Domicilio</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script>
+        const DESTINO = "Restaurante Jota Jota, Cienfuegos, Cuba";
         const NUMERO_NORMAL = "5350980360";
         const NUMERO_DOMINGO = "5363401398";
+        let baseDatos = [];
+        let dirSel = "";
+        let preSel = "";
 
-        let baseDatosDirecciones = [];
-        let direccionSeleccionada = "";
-        let precioSeleccionado = "";
-
-        // CARGAR CSV
         Papa.parse("direcciones.csv", {
-            download: true,
-            header: false,
-            skipEmptyLines: true,
-            complete: function(resultado) {
-                var filas = resultado.data;
-                if (filas.length > 0 && isNaN(parseFloat(filas[0][7]))) {
-                    baseDatosDirecciones = filas.slice(1);
-                } else {
-                    baseDatosDirecciones = filas;
-                }
-            }
+            download: true, header: false, skipEmptyLines: true,
+            complete: (res) => { baseDatos = res.data; }
         });
 
-        function sinAcentos(texto) {
-            return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-        }
-
-        // GOOGLE MAPS
         function abrirRutaGoogleMaps() {
-            if (!navigator.geolocation) {
-                window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(DESTINO_RESTAURANTE), "_blank");
-                return;
-            }
-            navigator.geolocation.getCurrentPosition(
-                function(pos) {
-                    var url = "https://www.google.com/maps/dir/?api=1"
-                        + "&origin=" + pos.coords.latitude + "," + pos.coords.longitude
-                        + "&destination=" + encodeURIComponent(DESTINO_RESTAURANTE)
-                        + "&travelmode=driving";
-                    window.open(url, "_blank");
-                },
-                function() {
-                    window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(DESTINO_RESTAURANTE), "_blank");
-                }
-            );
+            window.open("https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(DESTINO), "_blank");
         }
 
-        // BUSCADOR
-        var inputBuscar       = document.getElementById("buscarDireccion");
-        var listaSugerencias  = document.getElementById("listaSugerencias");
-        var resultadoTarifa   = document.getElementById("resultadoTarifa");
-        var precioTexto       = document.getElementById("precioTexto");
-        var detallesDireccion = document.getElementById("detallesDireccion");
-        var zonaTexto         = document.getElementById("zonaTexto");
-
-        inputBuscar.addEventListener("input", function() {
-            var valorOriginal = inputBuscar.value;
-            var busqueda = sinAcentos(valorOriginal);
-            listaSugerencias.innerHTML = "";
-
-            if (busqueda.length === 0) {
-                listaSugerencias.classList.add("hidden");
-                return;
-            }
-
-            busqueda = busqueda.replace(/^ave?\b/, "avenida").replace(/^ca\b/, "calle");
-
-            var coincidencias = baseDatosDirecciones.filter(function(fila) {
-                if (!fila[6]) return false;
-                return sinAcentos(fila[6]).includes(busqueda);
-            });
-
-            coincidencias.sort(function(a, b) {
-                var da = sinAcentos(a[6]);
-                var db = sinAcentos(b[6]);
-                if (da.startsWith(busqueda) && !db.startsWith(busqueda)) return -1;
-                if (!da.startsWith(busqueda) && db.startsWith(busqueda)) return 1;
-                return 0;
-            });
-
-            coincidencias = coincidencias.slice(0, 5);
-
-            if (coincidencias.length === 0) {
-                listaSugerencias.classList.add("hidden");
-                return;
-            }
-
-            listaSugerencias.classList.remove("hidden");
-
-            coincidencias.forEach(function(fila) {
-                var dir    = (fila[6] || "").trim();
-                var precio = (fila[7] || "0").trim();
-                var zona   = (fila[8] || "General").trim();
-
-                var btn = document.createElement("button");
-                btn.type = "button";
-                btn.className = "w-full text-left p-3 hover:bg-slate-800 transition-colors border-b border-slate-800 last:border-0 block focus:outline-none cursor-pointer";
-                btn.innerHTML = '<div class="font-medium text-slate-200">' + dir + '</div>' +
-                                '<div class="text-xs text-emerald-400 mt-0.5 font-semibold">Precio: ' + precio + ' CUP • Zona: ' + zona + '</div>';
-
-                btn.addEventListener("click", function() {
-                    direccionSeleccionada = dir;
-                    precioSeleccionado    = precio + " CUP";
-                    precioTexto.innerText       = precioSeleccionado;
-                    detallesDireccion.innerText = dir;
-                    zonaTexto.innerText         = zona;
-                    resultadoTarifa.classList.remove("hidden");
-                    listaSugerencias.classList.add("hidden");
-                    inputBuscar.value = dir;
+        const input = document.getElementById("buscarDireccion");
+        const lista = document.getElementById("listaSugerencias");
+        
+        input.addEventListener("input", function() {
+            const val = this.value.toLowerCase();
+            lista.innerHTML = "";
+            if (val.length < 2) { lista.classList.add("hidden"); return; }
+            
+            const matches = baseDatos.filter(f => f[6] && f[6].toLowerCase().includes(val));
+            
+            if (matches.length > 0) {
+                lista.classList.remove("hidden");
+                matches.slice(0, 5).forEach(f => {
+                    let btn = document.createElement("button");
+                    btn.className = "w-full text-left p-3 border-b border-slate-800";
+                    btn.innerHTML = f[6] + " - " + f[7] + " CUP";
+                    btn.onclick = () => {
+                        dirSel = f[6];
+                        preSel = f[7] + " CUP";
+                        document.getElementById("precioTexto").innerText = preSel;
+                        document.getElementById("detallesDireccion").innerText = dirSel;
+                        document.getElementById("resultadoTarifa").classList.remove("hidden");
+                        lista.classList.add("hidden");
+                    };
+                    lista.appendChild(btn);
                 });
-                listaSugerencias.appendChild(btn);
-            });
+            }
         });
 
-        // WHATSAPP INTELIGENTE
         function enviarPedidoWhatsApp() {
-            if (!direccionSeleccionada) return;
-            
-            // Detectar si hoy es domingo (0 es domingo en JS)
-            const hoyEsDomingo = new Date().getDay() === 0;
-            const numeroDestino = hoyEsDomingo ? NUMERO_DOMINGO : NUMERO_NORMAL;
-            
-            const aviso = hoyEsDomingo ? "\n\n⚠️ *Hoy es domingo, envío gestionado por reparto exclusivo.*" : "";
-            
-            var mensaje = "¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *" + direccionSeleccionada + "*\n\nTarifa calculada: *" + precioSeleccionado + "*" + aviso;
-            
-            window.open("https://wa.me/" + numeroDestino + "?text=" + encodeURIComponent(mensaje), "_blank");
+            const esDom = new Date().getDay() === 0;
+            const tel = esDom ? NUMERO_DOMINGO : NUMERO_NORMAL;
+            const msg = "Hola, quiero pedir a: " + dirSel + ". Precio: " + preSel;
+            window.open("https://wa.me/" + tel + "?text=" + encodeURIComponent(msg), "_blank");
         }
-
     </script>
+</body>
+</html>
