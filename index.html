@@ -30,7 +30,7 @@
                 </div>
                 <p class="text-xs text-slate-400">Abre Google Maps para ver el recorrido urbano exacto en tiempo real desde tu ubicación hasta Jota Jota.</p>
                 
-                <button onclick="abrirRutaGoogleMaps()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-gradient font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-md text-sm cursor-pointer uppercase tracking-wider flex items-center justify-center gap-2">
+                <button onclick="abrirRutaGoogleMaps()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-md text-sm cursor-pointer uppercase tracking-wider flex items-center justify-center gap-2">
                     🚀 Ver mi ruta en Google Maps
                 </button>
             </div>
@@ -70,16 +70,15 @@
         </main>
 
         <footer class="p-4 text-center text-[10px] text-slate-600 border-t border-slate-800 bg-slate-950/50">
-            &copy; 2026 Cienfuegos Express. Optimizado para el ahorro de datos móviles.
+            © 2026 Cienfuegos Express. Optimizado para el ahorro de datos móviles.
         </footer>
 
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
-        // COORDENADAS FIJAS DE JOTA JOTA EN CIENFUEGOS
-        const JOTA_JOTA_LAT = 22.1462; 
-        const JOTA_JOTA_LNG = -80.4515;
+        // DIRECCIÓN OFICIAL CORREGIDA PARA GOOGLE MAPS
+        const DESTINO_RESTAURANTE = "Restaurante Jota Jota, 5301 Avenida 5 de Septiembre, Cienfuegos, Cuba";
 
         let baseDatosDirecciones = [];
         let direccionSeleccionada = "";
@@ -93,7 +92,7 @@
             header: true,
             skipEmptyLines: true,
             complete: function(resultados) {
-                baseDatosDirecciones = resultados.data;
+                baseDatosDirecciones = $.data = resultados.data;
             }
         });
 
@@ -108,10 +107,12 @@
             return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
         }
 
-        // --- FUNCIÓN DE TU NUEVA IDEA: ABRE GOOGLE MAPS DIRECTAMENTE CON LA RUTA ---
+        // --- ENLACE DIRECTO DE NAVEGACIÓN A LA DIRECCIÓN CORREGIDA ---
         function abrirRutaGoogleMaps() {
             if (!navigator.geolocation) {
-                alert("Tu dispositivo no soporta geolocalización.");
+                alert("Tu dispositivo no soporta geolocalización. Abriendo mapa general de Jota Jota...");
+                const urlAlternativa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(DESTINO_RESTAURANTE)}`;
+                window.open(urlAlternativa, '_blank');
                 return;
             }
 
@@ -119,15 +120,12 @@
                 const userLat = position.coords.latitude;
                 const userLng = position.coords.longitude;
 
-                // Enlace de navegación nativo: Origen (Cliente) -> Destino (Jota Jota)
-                const urlGoogleMaps = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${JOTA_JOTA_LAT},${JOTA_JOTA_LNG}&travelmode=driving`;
-                
-                // Abre Google Maps en una pestaña nueva o en la app del móvil
+                // Trazar ruta real desde el GPS del cliente hasta la dirección exacta de la Av. 5 de Septiembre
+                const urlGoogleMaps = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${encodeURIComponent(DESTINO_RESTAURANTE)}&travelmode=driving`;
                 window.open(urlGoogleMaps, '_blank');
             }, function(error) {
-                // Si el GPS está apagado, abre la ruta buscando Jota Jota directamente
-                alert("Para trazar la ruta exacta desde tu posición actual, por favor activa el GPS. Abriendo mapa general de Jota Jota...");
-                const urlAlternativa = `https://www.google.com/maps/search/?api=1&query=${JOTA_JOTA_LAT},${JOTA_JOTA_LNG}`;
+                // Si el GPS del cliente está desactivado, busca directamente la ubicación del local
+                const urlAlternativa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(DESTINO_RESTAURANTE)}`;
                 window.open(urlAlternativa, '_blank');
             });
         }
