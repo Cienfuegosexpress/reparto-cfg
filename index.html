@@ -54,7 +54,7 @@
 
                 <div class="space-y-2">
                     <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Escribe tu calle o avenida:</label>
-                    <input type="text" id="buscarDireccion" placeholder="Ej: Avenida 2, Calle 35..." 
+                    <input type="text" id="buscarDireccion" placeholder="Ej: Av 62, Calle 35..." 
                            class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm shadow-inner">
                 </div>
 
@@ -98,7 +98,6 @@
         let direccionSeleccionada = "";
         let precioSeleccionado = "";
 
-        // NÚMEROS DE REPARTIDORES ROTATIVOS ALEATORIOS
         const REPARTIDORES = ["5350980360", "5363401398"]; 
 
         Papa.parse("direcciones.csv", {
@@ -176,7 +175,7 @@
             });
         }
 
-        // --- BUSCADOR INTELIGENTE CON PRIORIDAD ---
+        // --- BUSCADOR REVOLUCIONADO ---
         const inputBuscar = document.getElementById('buscarDireccion');
         const listaSugerencias = document.getElementById('listaSugerencias');
         const resultadoTarifa = document.getElementById('resultadoTarifa');
@@ -185,7 +184,8 @@
         const zonaTexto = document.getElementById('zonaTexto');
 
         inputBuscar.addEventListener('input', (e) => {
-            const textoBusqueda = nombreSinAcentos(e.target.value);
+            let valorInput = e.target.value;
+            let textoBusqueda = nombreSinAcentos(valorInput);
             listaSugerencias.innerHTML = "";
             
             if (textoBusqueda.length === 0) {
@@ -193,13 +193,23 @@
                 return;
             }
 
-            // 1. Filtramos todas las filas que contengan el texto
+            // TRADUCTOR DE ABREVIATURAS INTELIGENTE
+            // Si el usuario escribe "av " o "av 6" lo convierte mentalmente en "avenida " para buscar en el CSV
+            if (textoBusqueda === "av" || textoBusqueda.startsWith("av ")) {
+                textoBusqueda = textoBusqueda.replace("av", "avenida");
+            } else if (textoBusqueda === "ave" || textoBusqueda.startsWith("ave ")) {
+                textoBusqueda = textoBusqueda.replace("ave", "avenida");
+            } else if (textoBusqueda === "ca" || textoBusqueda.startsWith("ca ")) {
+                textoBusqueda = textoBusqueda.replace("ca", "calle");
+            }
+
+            // Filtramos las coincidencias
             let coincidencias = baseDatosDirecciones.filter(fila => {
                 const dirCompleta = nombreSinAcentos(obtenerValorColumna(fila, ['direccion_completa', 'dirección_completa']));
                 return dirCompleta.includes(textoBusqueda);
             });
 
-            // 2. ORDENACIÓN INTELIGENTE: Si la dirección EMPIEZA con lo que escribes (ej: "Avenida..."), va primero
+            // ORDENACIÓN ESTRICTA POR INICIO: Si la fila EMPIEZA exactamente con la palabra buscada, va arriba del todo
             coincidencias.sort((a, b) => {
                 const dirA = nombreSinAcentos(obtenerValorColumna(a, ['direccion_completa', 'dirección_completa']));
                 const dirB = nombreSinAcentos(obtenerValorColumna(b, ['direccion_completa', 'dirección_completa']));
@@ -212,7 +222,6 @@
                 return 0;
             });
 
-            // Nos quedamos con las 5 mejores opciones ya ordenadas
             coincidencias = coincidencias.slice(0, 5);
 
             if (coincidencias.length > 0) {
