@@ -31,7 +31,7 @@
                     <span>📍</span>
                     <h2 class="font-bold text-base text-white">Tu distancia a Jota Jota</h2>
                 </div>
-                <p class="text-xs text-slate-400">Calcula la distancia exacta desde tu ubicación actual para entender tu tarifa de envío.</p>
+                <p class="text-xs text-slate-400">Calcula la distancia aproximada en línea recta desde tu ubicación actual para tener una referencia orientativa.</p>
                 
                 <button id="btn-distancia" onclick="calcularRuta()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl transition duration-200 shadow-md text-sm cursor-pointer uppercase tracking-wider">
                     Calcular ruta y distancia
@@ -42,7 +42,7 @@
                 <div id="mapa" class="border border-slate-700 shadow-inner"></div>
                 
                 <p class="text-[10px] text-slate-500 text-center italic pt-1">
-                    * Nota: Puede haber un margen de error de ±0.2 km con respecto a la distancia real debido a la precisión del GPS de tu dispositivo.
+                    * Nota: El mapa muestra una guía referencial. El repartidor tomará la ruta urbana interna más óptima y rápida.
                 </p>
             </div>
 
@@ -88,6 +88,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
+        // COORDENADAS REALES DE JOTA JOTA (CIENFUEGOS)
         const JOTA_JOTA_LAT = 22.1462; 
         const JOTA_JOTA_LNG = -80.4515;
         let mapaLeaflet = null;
@@ -148,7 +149,7 @@
 
                 const distancia = obtenerDistanciaKM(userLat, userLng, JOTA_JOTA_LAT, JOTA_JOTA_LNG);
                 
-                resDiv.innerText = `¡Estás a ${distancia.toFixed(2)} km de Jota Jota!`;
+                resDiv.innerText = `Distancia estimada: ~${distancia.toFixed(2)} km`;
                 resDiv.classList.remove('hidden');
                 mapaDiv.style.display = 'block';
                 btn.innerText = "Calcular ruta y distancia";
@@ -175,7 +176,7 @@
             });
         }
 
-        // --- BUSCADOR REVOLUCIONADO ---
+        // --- BUSCADOR ---
         const inputBuscar = document.getElementById('buscarDireccion');
         const listaSugerencias = document.getElementById('listaSugerencias');
         const resultadoTarifa = document.getElementById('resultadoTarifa');
@@ -193,8 +194,6 @@
                 return;
             }
 
-            // TRADUCTOR DE ABREVIATURAS INTELIGENTE
-            // Si el usuario escribe "av " o "av 6" lo convierte mentalmente en "avenida " para buscar en el CSV
             if (textoBusqueda === "av" || textoBusqueda.startsWith("av ")) {
                 textoBusqueda = textoBusqueda.replace("av", "avenida");
             } else if (textoBusqueda === "ave" || textoBusqueda.startsWith("ave ")) {
@@ -203,13 +202,11 @@
                 textoBusqueda = textoBusqueda.replace("ca", "calle");
             }
 
-            // Filtramos las coincidencias
             let coincidencias = baseDatosDirecciones.filter(fila => {
                 const dirCompleta = nombreSinAcentos(obtenerValorColumna(fila, ['direccion_completa', 'dirección_completa']));
                 return dirCompleta.includes(textoBusqueda);
             });
 
-            // ORDENACIÓN ESTRICTA POR INICIO: Si la fila EMPIEZA exactamente con la palabra buscada, va arriba del todo
             coincidencias.sort((a, b) => {
                 const dirA = nombreSinAcentos(obtenerValorColumna(a, ['direccion_completa', 'dirección_completa']));
                 const dirB = nombreSinAcentos(obtenerValorColumna(b, ['direccion_completa', 'dirección_completa']));
@@ -260,10 +257,18 @@
             }
         });
 
+        // --- ENVIAR PEDIDO CON ENLACE DE DIRECCIÓN URBANA ---
         function enviarPedidoWhatsApp() {
             if (!direccionSeleccionada) return;
             const numeroElegido = REPARTIDORES[Math.floor(Math.random() * REPARTIDORES.length)];
-            const mensaje = `¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *${direccionSeleccionada}*\n\nTarifa calculada: *${precioSeleccionado}*`;
+            
+            // Genera un enlace de Google Maps que traza la ruta desde Jota Jota hasta el destino exacto por calles internas
+            const origenMaps = `${JOTA_JOTA_LAT},${JOTA_JOTA_LNG}`;
+            const destinoMaps = encodeURIComponent(`${direccionSeleccionada}, Cienfuegos, Cuba`);
+            const enlaceRutaGps = `https://www.google.com/maps/dir/?api=1&origin=${origenMaps}&destination=${destinoMaps}&travelmode=driving`;
+
+            const mensaje = `¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio:\n📍 *${direccionSeleccionada}*\n\nTarifa: *${precioSeleccionado}*\n\n🗺️ *Ruta para el repartidor (GPS):*\n${enlaceRutaGps}`;
+            
             window.open(`https://wa.me/${numeroElegido}?text=${encodeURIComponent(mensaje)}`, '_blank');
         }
     </script>
