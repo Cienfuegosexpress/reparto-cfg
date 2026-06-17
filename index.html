@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="space-y-2">
-                    <input type="text" id="buscarDireccion" placeholder="Escribe aquí (ej: Avenida 62)..."
+                    <input type="text" id="buscarDireccion" placeholder="Escribe tu calle o avenida..."
                            class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm shadow-inner">
                 </div>
 
@@ -89,37 +89,31 @@
         inputBuscar.addEventListener("input", function() {
             var busqueda = sinAcentos(inputBuscar.value);
             listaSugerencias.innerHTML = "";
-            if (busqueda.length < 2) { listaSugerencias.classList.add("hidden"); return; }
             
-            // FILTRO PRECISO: Busca exactamente lo que escribes, sin trucos ni abreviaturas automáticas
+            if (busqueda.length < 2) { 
+                listaSugerencias.classList.add("hidden"); 
+                return; 
+            }
+            
             var coincidencias = baseDatosDirecciones.filter(function(fila) { 
                 return fila[6] && sinAcentos(fila[6]).includes(busqueda); 
+            }).sort(function(a, b) {
+                var aStarts = sinAcentos(a[6]).startsWith(busqueda);
+                var bStarts = sinAcentos(b[6]).startsWith(busqueda);
+                return aStarts === bStarts ? 0 : aStarts ? -1 : 1;
             });
             
-            listaSugerencias.classList.remove("hidden");
-            coincidencias.slice(0, 5).forEach(function(fila) {
-                var btn = document.createElement("button");
-                btn.className = "w-full text-left p-3 hover:bg-slate-800 border-b border-slate-800 text-white";
-                btn.innerHTML = '<div>' + fila[6] + '</div><div class="text-xs text-emerald-400">Precio: ' + fila[7] + ' CUP</div>';
-                btn.onclick = function() {
-                    direccionSeleccionada = fila[6];
-                    precioSeleccionado = fila[7] + " CUP";
-                    document.getElementById("precioTexto").innerText = precioSeleccionado;
-                    document.getElementById("detallesDireccion").innerText = direccionSeleccionada;
-                    resultadoTarifa.classList.remove("hidden");
-                    listaSugerencias.classList.add("hidden");
-                    inputBuscar.value = fila[6];
-                };
-                listaSugerencias.appendChild(btn);
-            });
-        });
-
-        function enviarPedidoWhatsApp() {
-            if (!direccionSeleccionada) return;
-            const esDomingo = new Date().getDay() === 0;
-            const numeroElegido = esDomingo ? TEL_DOMINGO : TEL_NORMAL;
-            window.open("https://wa.me/" + numeroElegido + "?text=" + encodeURIComponent("¡Hola! Quiero solicitar domicilio a: " + direccionSeleccionada + ". Tarifa: " + precioSeleccionado), "_blank");
-        }
-    </script>
-</body>
-</html>
+            if (coincidencias.length > 0) {
+                listaSugerencias.classList.remove("hidden");
+                coincidencias.slice(0, 6).forEach(function(fila) {
+                    var btn = document.createElement("button");
+                    btn.className = "w-full text-left p-3 hover:bg-slate-800 border-b border-slate-800 text-white";
+                    btn.innerHTML = '<div>' + fila[6] + '</div><div class="text-xs text-emerald-400">Precio: ' + fila[7] + ' CUP</div>';
+                    btn.onclick = function() {
+                        direccionSeleccionada = fila[6];
+                        precioSeleccionado = fila[7] + " CUP";
+                        document.getElementById("precioTexto").innerText = precioSeleccionado;
+                        document.getElementById("detallesDireccion").innerText = direccionSeleccionada;
+                        resultadoTarifa.classList.remove("hidden");
+                        listaSugerencias.classList.add("hidden");
+                        inputBuscar.value = fila[6];
