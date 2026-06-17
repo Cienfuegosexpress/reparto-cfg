@@ -77,31 +77,26 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
-        // DIRECCIÓN OFICIAL DEL RESTAURANTE JOTA JOTA
         const DESTINO_RESTAURANTE = "Restaurante Jota Jota, 5301 Avenida 5 de Septiembre, Cienfuegos, Cuba";
-
         let baseDatosDirecciones = [];
         let direccionSeleccionada = "";
         let precioSeleccionado = "";
-
         const REPARTIDORES = ["5350980360", "5363401398"]; 
 
-        // Cargar el archivo CSV de manera limpia
+        // Cargar el archivo CSV (Carga normalizada sin depender del nombre de la cabecera)
         Papa.parse("direcciones.csv", {
             download: true,
-            header: true,
+            header: false, // Forzamos a leer por posición física, no por nombre de columna
             skipEmptyLines: true,
             complete: function(resultados) {
-                baseDatosDirecciones = resultados.data;
+                // Si la primera fila contiene títulos, la descartamos para quedarnos solo con los datos reales
+                if (resultados.data.length > 0 && isNaN(resultados.data[0][1])) {
+                    baseDatosDirecciones = resultados.data.slice(1);
+                } else {
+                    baseDatosDirecciones = resultados.data;
+                }
             }
         });
-
-        function obtenerValorColumna(fila, nombresPosibles) {
-            for (let nombre of nombresPosibles) {
-                if (fila[nombre] !== undefined && fila[nombre] !== null) return fila[nombre].trim();
-            }
-            return "";
-        }
 
         function nombreSinAcentos(texto) {
             return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
@@ -115,22 +110,18 @@
                 window.open(urlAlternativa, '_blank');
                 return;
             }
-
             navigator.geolocation.getCurrentPosition(function(position) {
                 const userLat = position.coords.latitude;
                 const userLng = position.coords.longitude;
-
-                // Trazar ruta real desde el GPS del cliente hasta la dirección exacta de la Av. 5 de Septiembre
                 const urlGoogleMaps = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${encodeURIComponent(DESTINO_RESTAURANTE)}&travelmode=driving`;
                 window.open(urlGoogleMaps, '_blank');
             }, function(error) {
-                // Si el GPS del cliente está desactivado, busca directamente la ubicación del local
                 const urlAlternativa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(DESTINO_RESTAURANTE)}`;
                 window.open(urlAlternativa, '_blank');
             });
         }
 
-        // --- BUSCADOR ULTRA SENSIBLE CORREGIDO ---
+        // --- BUSCADOR ULTRA AUTOMÁTICO (POR POSICIÓN DE COLUMNA) ---
         const inputBuscar = document.getElementById('buscarDireccion');
         const listaSugerencias = document.getElementById('listaSugerencias');
         const resultadoTarifa = document.getElementById('resultadoTarifa');
@@ -148,7 +139,7 @@
                 return;
             }
 
-            // Normalizar abreviaturas típicas
+            // Normalizar abreviaturas típicas de búsqueda
             if (textoBusqueda === "av" || textoBusqueda.startsWith("av ")) {
                 textoBusqueda = textoBusqueda.replace("av", "avenida");
             } else if (textoBusqueda === "ave" || textoBusqueda.startsWith("ave ")) {
@@ -157,19 +148,19 @@
                 textoBusqueda = textoBusqueda.replace("ca", "calle");
             }
 
+            // Buscamos estrictamente en la primera posición disponible de cada fila [0]
             let coincidencias = baseDatosDirecciones.filter(fila => {
-                const dirCompleta = nombreSinAcentos(obtenerValorColumna(fila, ['direccion_completa', 'dirección_completa']));
+                if(!fila[0]) return false;
+                const dirCompleta = nombreSinAcentos(fila[0]);
                 return dirCompleta.includes(textoBusqueda);
             });
 
-            // --- LÍNEA CORREGIDA DE ORDENAMIENTO (SIN ERROR SINTÁCTICO) ---
+            // Ordenar por relevancia
             coincidencias.sort((a, b) => {
-                const dirA = nombreSinAcentos(obtenerValorColumna(a, ['direccion_completa', 'dirección_completa']));
-                const dirB = nombreSinAcentos(obtenerValorColumna(b, ['direccion_completa', 'dirección_completa']));
-                
+                const dirA = nombreSinAcentos(a[0]);
+                const dirB = nombreSinAcentos(b[0]);
                 const empiezaA = dirA.startsWith(textoBusqueda);
                 const empiezaB = dirB.startsWith(textoBusqueda);
-                
                 if (empiezaA && !empiezaB) return -1;
                 if (!empiezaA && empiezaB) return 1;
                 return 0;
@@ -180,9 +171,9 @@
             if (coincidencias.length > 0) {
                 listaSugerencias.classList.remove('hidden');
                 coincidencias.forEach(fila => {
-                    const dirCompletaOriginal = obtenerValorColumna(fila, ['direccion_completa', 'dirección_completa']);
-                    const precioOriginal = obtenerValorColumna(fila, ['precio']);
-                    const zonaOriginal = obtenerValorColumna(fila, ['zona']) || "General";
+                    const dirCompletaOriginal = fila[0].trim();
+                    const precioOriginal = fila[1] ? fila[1].trim() : "0";
+                    const zonaOriginal = fila[2] ? fila[2].trim() : "General";
 
                     const botonOpcion = document.createElement('button');
                     botonOpcion.type = "button";
@@ -217,7 +208,6 @@
         function enviarPedidoWhatsApp() {
             if (!direccionSeleccionada) return;
             const numeroElegido = REPARTIDORES[Math.floor(Math.random() * REPARTIDORES.length)];
-            
             const mensaje = `¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *${direccionSeleccionada}*\n\nTarifa calculada: *${precioSeleccionado}*`;
             window.open(`https://wa.me/${numeroElegido}?text=${encodeURIComponent(mensaje)}`, '_blank');
         }
