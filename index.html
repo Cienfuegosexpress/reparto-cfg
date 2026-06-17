@@ -81,16 +81,21 @@
         let baseDatosDirecciones = [];
         let direccionSeleccionada = "";
         let precioSeleccionado = "";
-        const REPARTIDORES = ["5350980360", "5363401398"]; 
+        const REPARTIDORES = ["5350980360", "5363401398"];
 
-        // Cargar el archivo CSV (Carga normalizada sin depender del nombre de la cabecera)
+        // =====================================================
+        // CARGA DEL CSV
+        // El CSV tiene 10 columnas separadas por comas:
+        // [0]=via  [1]=numero  [2]=via  [3]=cruce1  [4]=via  [5]=cruce2
+        // [6]=direccion_completa  [7]=precio  [8]=zona  [9]=aliases
+        // =====================================================
         Papa.parse("direcciones.csv", {
             download: true,
-            header: false, // Forzamos a leer por posición física, no por nombre de columna
+            header: false,
             skipEmptyLines: true,
             complete: function(resultados) {
-                // Si la primera fila contiene títulos, la descartamos para quedarnos solo con los datos reales
-                if (resultados.data.length > 0 && isNaN(resultados.data[0][1])) {
+                // Descartar la primera fila si es la cabecera (contiene texto, no número en col [7])
+                if (resultados.data.length > 0 && isNaN(resultados.data[0][7])) {
                     baseDatosDirecciones = resultados.data.slice(1);
                 } else {
                     baseDatosDirecciones = resultados.data;
@@ -102,10 +107,12 @@
             return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
         }
 
-        // --- ENLACE DIRECTO DE NAVEGACIÓN A GOOGLE MAPS ---
+        // =====================================================
+        // GOOGLE MAPS — ruta desde ubicación del cliente hasta Jota Jota
+        // =====================================================
         function abrirRutaGoogleMaps() {
             if (!navigator.geolocation) {
-                alert("Tu dispositivo no soporta geolocalización. Abriendo mapa general de Jota Jota...");
+                alert("Tu dispositivo no soporta geolocalización. Abriendo mapa de Jota Jota...");
                 const urlAlternativa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(DESTINO_RESTAURANTE)}`;
                 window.open(urlAlternativa, '_blank');
                 return;
@@ -121,7 +128,9 @@
             });
         }
 
-        // --- BUSCADOR ULTRA AUTOMÁTICO (POR POSICIÓN DE COLUMNA) ---
+        // =====================================================
+        // BUSCADOR — usa columna [6] para dirección, [7] precio, [8] zona
+        // =====================================================
         const inputBuscar = document.getElementById('buscarDireccion');
         const listaSugerencias = document.getElementById('listaSugerencias');
         const resultadoTarifa = document.getElementById('resultadoTarifa');
@@ -133,32 +142,36 @@
             let valorInput = e.target.value;
             let textoBusqueda = nombreSinAcentos(valorInput);
             listaSugerencias.innerHTML = "";
-            
+
             if (textoBusqueda.length === 0) {
                 listaSugerencias.classList.add('hidden');
                 return;
             }
 
-            // Normalizar abreviaturas típicas de búsqueda
-            if (textoBusqueda === "av" || textoBusqueda.startsWith("av ")) {
-                textoBusqueda = textoBusqueda.replace("av", "avenida");
-            } else if (textoBusqueda === "ave" || textoBusqueda.startsWith("ave ")) {
-                textoBusqueda = textoBusqueda.replace("ave", "avenida");
-            } else if (textoBusqueda === "ca" || textoBusqueda.startsWith("ca ")) {
-                textoBusqueda = textoBusqueda.replace("ca", "calle");
+            // Normalizar abreviaturas comunes usando expresiones regulares exactas
+            const abreviaturas = [
+                { patron: /^av\b/, reemplazo: "avenida" },
+                { patron: /^ave\b/, reemplazo: "avenida" },
+                { patron: /^ca\b/, reemplazo: "calle" },
+            ];
+            for (const { patron, reemplazo } of abreviaturas) {
+                if (patron.test(textoBusqueda)) {
+                    textoBusqueda = textoBusqueda.replace(patron, reemplazo);
+                    break;
+                }
             }
 
-            // Buscamos estrictamente en la primera posición disponible de cada fila [0]
+            // Buscar en la columna [6] que contiene la dirección completa
             let coincidencias = baseDatosDirecciones.filter(fila => {
-                if(!fila[0]) return false;
-                const dirCompleta = nombreSinAcentos(fila[0]);
+                if (!fila[6]) return false;
+                const dirCompleta = nombreSinAcentos(fila[6]);
                 return dirCompleta.includes(textoBusqueda);
             });
 
-            // Ordenar por relevancia
+            // Ordenar: primero los que empiezan con el texto buscado
             coincidencias.sort((a, b) => {
-                const dirA = nombreSinAcentos(a[0]);
-                const dirB = nombreSinAcentos(b[0]);
+                const dirA = nombreSinAcentos(a[6]);
+                const dirB = nombreSinAcentos(b[6]);
                 const empiezaA = dirA.startsWith(textoBusqueda);
                 const empiezaB = dirB.startsWith(textoBusqueda);
                 if (empiezaA && !empiezaB) return -1;
@@ -171,32 +184,33 @@
             if (coincidencias.length > 0) {
                 listaSugerencias.classList.remove('hidden');
                 coincidencias.forEach(fila => {
-                    const dirCompletaOriginal = fila[0].trim();
-                    const precioOriginal = fila[1] ? fila[1].trim() : "0";
-                    const zonaOriginal = fila[2] ? fila[2].trim() : "General";
+                    // Columna [6] = dirección completa, [7] = precio, [8] = zona
+                    const dirCompletaOriginal = fila[6] ? fila[6].trim() : "";
+                    const precioOriginal      = fila[7] ? fila[7].trim() : "0";
+                    const zonaOriginal        = fila[8] ? fila[8].trim() : "General";
 
                     const botonOpcion = document.createElement('button');
                     botonOpcion.type = "button";
                     botonOpcion.className = "w-full text-left p-3 hover:bg-slate-800 transition-colors border-b border-slate-800 last:border-0 block focus:outline-none cursor-pointer";
-                    
+
                     botonOpcion.innerHTML = `
                         <div class="font-medium text-slate-200">${dirCompletaOriginal}</div>
-                        <div class="text-xs text-emerald-400 mt-0.5 font-semibold">Precio: ${precioOriginal} CUP • Zona: ${zonaOriginal}</div>
+                        <div class="text-xs text-emerald-400 mt-0.5 font-semibold">Precio: ${precioOriginal} CUP &bull; Zona: ${zonaOriginal}</div>
                     `;
 
                     botonOpcion.onclick = function() {
                         direccionSeleccionada = dirCompletaOriginal;
                         precioSeleccionado = `${precioOriginal} CUP`;
-                        
+
                         precioTexto.innerText = precioSeleccionado;
                         detallesDireccion.innerText = direccionSeleccionada;
                         zonaTexto.innerText = zonaOriginal;
-                        
+
                         resultadoTarifa.classList.remove('hidden');
                         listaSugerencias.classList.add('hidden');
                         inputBuscar.value = direccionSeleccionada;
                     };
-                    
+
                     listaSugerencias.appendChild(botonOpcion);
                 });
             } else {
@@ -204,7 +218,9 @@
             }
         });
 
-        // --- ENVIAR PEDIDO POR WHATSAPP ---
+        // =====================================================
+        // ENVIAR PEDIDO POR WHATSAPP
+        // =====================================================
         function enviarPedidoWhatsApp() {
             if (!direccionSeleccionada) return;
             const numeroElegido = REPARTIDORES[Math.floor(Math.random() * REPARTIDORES.length)];
