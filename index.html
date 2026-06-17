@@ -6,14 +6,31 @@
     <title>Cienfuegos Express - Tarifas y Pedidos</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        body { font-family: system-ui, -apple-system, sans-serif; }
+        body { 
+            font-family: system-ui, -apple-system, sans-serif;
+            /* Aquí ponemos el logo de fondo */
+            background-image: url('logo.png');
+            background-size: 500px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #0f172a; /* Fondo azul oscuro */
+        }
+        /* Esto hace que el logo esté transparente */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: inherit;
+            opacity: 0.1; /* Transparencia al 10% */
+            z-index: -1;
+        }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen antialiased flex items-center justify-center p-0 sm:p-4">
+<body class="text-slate-100 min-h-screen antialiased flex items-center justify-center p-0 sm:p-4">
 
-    <div class="max-w-md w-full bg-slate-900 min-h-screen sm:min-h-0 sm:rounded-3xl shadow-2xl border border-slate-800 flex flex-col overflow-hidden">
+    <div class="max-w-md w-full bg-slate-900/95 min-h-screen sm:min-h-0 sm:rounded-3xl shadow-2xl border border-slate-800 flex flex-col overflow-hidden backdrop-blur-sm">
 
-        <header class="bg-gradient-to-b from-blue-700 to-blue-800 p-6 flex flex-col items-center text-center border-b border-blue-600 shadow-lg relative">
+        <header class="bg-gradient-to-b from-blue-700 to-blue-800 p-6 flex flex-col items-center text-center border-b border-blue-600 shadow-lg">
             <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center overflow-hidden border-4 border-slate-950 shadow-xl mb-3">
                 <img src="logo.png" alt="Cienfuegos Express" class="w-full h-full object-cover" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2972/2972185.png';">
             </div>
@@ -23,20 +40,14 @@
 
         <main class="p-5 flex-1 space-y-6">
             <div class="bg-slate-800/90 border border-slate-700 p-5 rounded-2xl shadow-xl space-y-3">
-                <div class="flex items-center space-x-2">
-                    <span>🗺️</span>
-                    <h2 class="font-bold text-base text-white">Ver ruta en Google Maps</h2>
-                </div>
+                <div class="flex items-center space-x-2"><span>🗺️</span><h2 class="font-bold text-base text-white">Ver ruta en Google Maps</h2></div>
                 <button onclick="abrirRutaGoogleMaps()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-md text-sm cursor-pointer uppercase tracking-wider flex items-center justify-center gap-2">
                     🚀 Ver mi ruta en Google Maps
                 </button>
             </div>
 
             <section class="bg-slate-800/90 p-5 rounded-2xl border border-slate-700 space-y-4 shadow-xl">
-                <div class="flex items-center gap-2">
-                    <span class="text-xl">🔍</span>
-                    <h2 class="font-bold text-base text-white">Consulta tu dirección</h2>
-                </div>
+                <div class="flex items-center gap-2"><span class="text-xl">🔍</span><h2 class="font-bold text-base text-white">Consulta tu dirección</h2></div>
                 <input type="text" id="buscarDireccion" placeholder="Ej: Calle 7, Avenida 62..." class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm shadow-inner">
                 <div id="listaSugerencias" class="hidden max-h-56 overflow-y-auto bg-slate-950 border border-slate-700 rounded-xl divide-y divide-slate-800 text-sm shadow-2xl"></div>
 
@@ -48,7 +59,7 @@
                     <div class="text-xs text-slate-300 space-y-2 pt-2 border-t border-slate-800">
                         <p class="font-bold text-slate-200">📌 Dirección de Entrega:</p>
                         <p id="detallesDireccion" class="italic text-slate-300 bg-slate-950/60 p-2 rounded border border-slate-800"></p>
-                        <p class="pt-1">📍 <span class="font-semibold text-slate-400">Zona de Cienfuegos:</span> <span id="zonaTexto" class="text-blue-400 font-bold"></span></p>
+                        <p class="pt-1">📍 <span class="font-semibold text-slate-400">Zona:</span> <span id="zonaTexto" class="text-blue-400 font-bold"></span></p>
                     </div>
                     <button onclick="enviarPedidoWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer text-sm tracking-wide uppercase mt-2">
                         <span>💬</span> Solicitar Domicilio Ahora
@@ -57,71 +68,55 @@
             </section>
         </main>
 
-        <footer class="p-4 text-center text-[10px] text-slate-600 border-t border-slate-800 bg-slate-950/50">
-            © 2026 Cienfuegos Express.
-        </footer>
+        <footer class="p-4 text-center text-[10px] text-slate-600 border-t border-slate-800 bg-slate-950/50">© 2026 Cienfuegos Express.</footer>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
-        const DESTINO_RESTAURANTE = "Restaurante Jota Jota, 5301 Avenida 5 de Septiembre, Cienfuegos, Cuba";
         const TEL_NORMAL = "5350980360";
         const TEL_DOMINGO = "5363401398";
-
+        
         let baseDatosDirecciones = [];
         let direccionSeleccionada = "";
         let precioSeleccionado = "";
-        let zonaSeleccionada = "";
 
-        Papa.parse("direcciones.csv", {
-            download: true, header: false, skipEmptyLines: true,
-            complete: function(resultado) { baseDatosDirecciones = resultado.data; }
-        });
+        Papa.parse("direcciones.csv", { download: true, header: false, skipEmptyLines: true, complete: (res) => { baseDatosDirecciones = res.data; }});
 
-        function sinAcentos(texto) { return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim(); }
-
-        function abrirRutaGoogleMaps() { window.open("https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(DESTINO_RESTAURANTE), "_blank"); }
-
-        var inputBuscar = document.getElementById("buscarDireccion");
-        var listaSugerencias = document.getElementById("listaSugerencias");
-        var resultadoTarifa = document.getElementById("resultadoTarifa");
+        function sinAcentos(t) { return (t||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim(); }
 
         inputBuscar.addEventListener("input", function() {
-            var busqueda = sinAcentos(inputBuscar.value);
+            let busqueda = sinAcentos(this.value);
             listaSugerencias.innerHTML = "";
             if (busqueda.length < 2) { listaSugerencias.classList.add("hidden"); return; }
-            
-            var coincidencias = baseDatosDirecciones.filter(function(fila) { return fila[6] && sinAcentos(fila[6]).includes(busqueda); })
-            .sort((a,b) => sinAcentos(a[6]).startsWith(busqueda) ? -1 : 1);
+            let coincidencias = baseDatosDirecciones.filter(f => f[6] && sinAcentos(f[6]).includes(busqueda)).sort((a,b) => sinAcentos(a[6]).startsWith(busqueda) ? -1 : 1);
             
             if (coincidencias.length > 0) {
                 listaSugerencias.classList.remove("hidden");
-                coincidencias.slice(0, 5).forEach(function(fila) {
-                    var btn = document.createElement("button");
+                coincidencias.slice(0, 5).forEach(f => {
+                    let btn = document.createElement("button");
                     btn.className = "w-full text-left p-3 hover:bg-slate-800 border-b border-slate-800";
-                    btn.innerHTML = '<div class="font-medium text-slate-200">' + fila[6] + '</div><div class="text-xs text-emerald-400 mt-0.5 font-semibold">Precio: ' + fila[7] + ' CUP • Zona: ' + (fila[8]||"") + '</div>';
-                    btn.onclick = function() {
-                        direccionSeleccionada = fila[6];
-                        precioSeleccionado = fila[7] + " CUP";
-                        zonaSeleccionada = fila[8] || "General";
+                    btn.innerHTML = `<div class='font-medium text-slate-200'>${f[6]}</div><div class='text-xs text-emerald-400'>Precio: ${f[7]} CUP</div>`;
+                    btn.onclick = () => {
+                        direccionSeleccionada = f[6]; precioSeleccionado = f[7] + " CUP";
                         document.getElementById("precioTexto").innerText = precioSeleccionado;
-                        document.getElementById("detallesDireccion").innerText = direccionSeleccionada;
-                        document.getElementById("zonaTexto").innerText = zonaSeleccionada;
-                        resultadoTarifa.classList.remove("hidden");
-                        listaSugerencias.classList.add("hidden");
-                        inputBuscar.value = fila[6];
+                        document.getElementById("detallesDireccion").innerText = f[6];
+                        document.getElementById("zonaTexto").innerText = f[8] || "General";
+                        resultadoTarifa.classList.remove("hidden"); listaSugerencias.classList.add("hidden"); inputBuscar.value = f[6];
                     };
                     listaSugerencias.appendChild(btn);
                 });
-            } else { listaSugerencias.classList.add("hidden"); }
+            }
         });
 
         function enviarPedidoWhatsApp() {
             if (!direccionSeleccionada) return;
-            const esDomingo = new Date().getDay() === 0;
-            const numero = esDomingo ? TEL_DOMINGO : TEL_NORMAL;
-            var mensaje = "¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *" + direccionSeleccionada + "*\n\nTarifa calculada: *" + precioSeleccionado + "*";
-            window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje), "_blank");
+            // Lógica: Si es domingo, elige entre los dos números. Si no, solo el principal.
+            let numeroElegido = (new Date().getDay() === 0) 
+                ? (Math.random() > 0.5 ? TEL_DOMINGO : TEL_NORMAL) 
+                : TEL_NORMAL;
+                
+            let msg = `¡Hola! 🛵\n\nQuiero solicitar un domicilio a:\n📍 *${direccionSeleccionada}*\n\nTarifa: *${precioSeleccionado}*`;
+            window.open("https://wa.me/" + numeroElegido + "?text=" + encodeURIComponent(msg), "_blank");
         }
     </script>
 </body>
