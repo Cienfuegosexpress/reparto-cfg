@@ -50,9 +50,17 @@
                         <p id="detallesDireccion" class="italic text-slate-300 bg-slate-950/60 p-2 rounded border border-slate-800"></p>
                         <p class="pt-1">📍 <span class="font-semibold text-slate-400">Zona de Cienfuegos:</span> <span id="zonaTexto" class="text-blue-400 font-bold"></span></p>
                     </div>
-                    <button onclick="enviarPedidoWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer text-sm tracking-wide uppercase mt-2">
-                        <span>💬</span> Solicitar Domicilio Ahora
-                    </button>
+                    
+                    <div class="grid grid-cols-1 gap-3 pt-2">
+                        <button onclick="enviarPedidoWhatsApp('5350980360')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer text-sm tracking-wide uppercase">
+                            <span>💬</span> Repartidor 1 (WhatsApp)
+                        </button>
+                        
+                        <button id="btnDomingo" onclick="enviarPedidoWhatsApp('5363401398')" class="w-full border border-yellow-600 text-yellow-500 hover:bg-yellow-600/20 font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex flex-col items-center justify-center gap-1 cursor-pointer text-xs tracking-wide uppercase">
+                            <span class="flex items-center gap-2 font-bold text-sm">💬 Repartidor 2 (WhatsApp)</span>
+                            <span class="font-normal opacity-80">(Solo funciona los Domingos)</span>
+                        </button>
+                    </div>
                 </div>
             </section>
         </main>
@@ -65,13 +73,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
         const DESTINO_RESTAURANTE = "Restaurante Jota Jota, 5301 Avenida 5 de Septiembre, Cienfuegos, Cuba";
-        const TEL_NORMAL = "5350980360";
-        const TEL_DOMINGO = "5363401398";
-
+        
         let baseDatosDirecciones = [];
         let direccionSeleccionada = "";
         let precioSeleccionado = "";
-        let zonaSeleccionada = "";
 
         Papa.parse("direcciones.csv", {
             download: true, header: false, skipEmptyLines: true,
@@ -103,10 +108,9 @@
                     btn.onclick = function() {
                         direccionSeleccionada = fila[6];
                         precioSeleccionado = fila[7] + " CUP";
-                        zonaSeleccionada = fila[8] || "General";
                         document.getElementById("precioTexto").innerText = precioSeleccionado;
                         document.getElementById("detallesDireccion").innerText = direccionSeleccionada;
-                        document.getElementById("zonaTexto").innerText = zonaSeleccionada;
+                        document.getElementById("zonaTexto").innerText = fila[8] || "General";
                         resultadoTarifa.classList.remove("hidden");
                         listaSugerencias.classList.add("hidden");
                         inputBuscar.value = fila[6];
@@ -116,10 +120,16 @@
             } else { listaSugerencias.classList.add("hidden"); }
         });
 
-        function enviarPedidoWhatsApp() {
+        function enviarPedidoWhatsApp(numero) {
             if (!direccionSeleccionada) return;
+            
+            // Validar si intentan usar el domingo en otro día
             const esDomingo = new Date().getDay() === 0;
-            const numero = esDomingo ? TEL_DOMINGO : TEL_NORMAL;
+            if (numero === '5363401398' && !esDomingo) {
+                alert("Este número solo está disponible los domingos. Por favor usa el otro repartidor.");
+                return;
+            }
+
             var mensaje = "¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *" + direccionSeleccionada + "*\n\nTarifa calculada: *" + precioSeleccionado + "*";
             window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje), "_blank");
         }
