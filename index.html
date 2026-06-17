@@ -98,10 +98,9 @@
         let direccionSeleccionada = "";
         let precioSeleccionado = "";
 
-        // NÚMEROS DE TELÉFONO RESPALDADOS
+        // NÚMEROS DE REPARTIDORES ROTATIVOS ALEATORIOS
         const REPARTIDORES = ["5350980360", "5363401398"]; 
 
-        // Carga del archivo CSV de precios
         Papa.parse("direcciones.csv", {
             download: true,
             header: true,
@@ -122,7 +121,6 @@
             return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
         }
 
-        // --- CÁLCULO DE DISTANCIA ---
         function obtenerDistanciaKM(lat1, lon1, lat2, lon2) {
             const R = 6371; 
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -178,7 +176,7 @@
             });
         }
 
-        // --- BUSCADOR PREDICTIVO CON BOTONES NATIVOS ---
+        // --- BUSCADOR ULTRA SENSIBLE DESDE LA PRIMERA LETRA ---
         const inputBuscar = document.getElementById('buscarDireccion');
         const listaSugerencias = document.getElementById('listaSugerencias');
         const resultadoTarifa = document.getElementById('resultadoTarifa');
@@ -190,7 +188,8 @@
             const textoBusqueda = nombreSinAcentos(e.target.value);
             listaSugerencias.innerHTML = "";
             
-            if (textoBusqueda.length < 2) {
+            // Reacción inmediata: si está vacío, esconde el menú
+            if (textoBusqueda.length === 0) {
                 listaSugerencias.classList.add('hidden');
                 return;
             }
@@ -238,7 +237,6 @@
             }
         });
 
-        // ENVÍO DE WHATSAPP CON SELECCIÓN ALEATORIA DE NÚMEROS
         function enviarPedidoWhatsApp() {
             if (!direccionSeleccionada) return;
             const numeroElegido = REPARTIDORES[Math.floor(Math.random() * REPARTIDORES.length)];
