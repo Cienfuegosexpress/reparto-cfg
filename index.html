@@ -41,7 +41,6 @@
                     <span class="text-xl">🔍</span>
                     <h2 class="font-bold text-base text-white">Consulta tu dirección</h2>
                 </div>
-
                 <div class="space-y-2">
                     <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Escribe tu calle o avenida:</label>
                     <input type="text" id="buscarDireccion"
@@ -82,16 +81,29 @@
                     <h2 class="font-bold text-base text-white">Comparte esta página</h2>
                 </div>
                 <div class="flex flex-col items-center gap-4">
-                    <div class="bg-white p-3 rounded-2xl shadow-lg">
-                        <canvas id="qrCanvas"></canvas>
+                    <!-- QR generado como imagen simple — funciona en todos los dispositivos -->
+                    <div class="bg-white p-4 rounded-2xl shadow-lg">
+                        <img
+                            id="imgQR"
+                            src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https%3A%2F%2Fcienfuegosexpress.github.io%2Freparto-cfg%2F&color=0f172a&bgcolor=ffffff&qzone=1&format=png"
+                            alt="QR Cienfuegos Express"
+                            width="180"
+                            height="180"
+                            style="display:block; border-radius: 8px;"
+                        >
                     </div>
                     <div class="text-center space-y-1">
                         <p class="text-xs text-slate-400">Escanea con la cámara del móvil</p>
                         <p class="text-[10px] text-slate-500 font-mono break-all">cienfuegosexpress.github.io/reparto-cfg/</p>
                     </div>
-                    <button onclick="descargarQR()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-sm cursor-pointer">
-                        ⬇️ Descargar QR
-                    </button>
+                    <a
+                        href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=https%3A%2F%2Fcienfuegosexpress.github.io%2Freparto-cfg%2F&color=0f172a&bgcolor=ffffff&qzone=2&format=png"
+                        download="cienfuegos-express-qr.png"
+                        target="_blank"
+                        class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-sm cursor-pointer no-underline text-center"
+                    >
+                        ⬇️ Descargar QR en alta calidad
+                    </a>
                 </div>
             </section>
 
@@ -104,65 +116,8 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
 
-        // =========================================================
-        // QR CODE
-        // =========================================================
-        var URL_PAGINA = "https://cienfuegosexpress.github.io/reparto-cfg/";
-
-        window.addEventListener("load", function() {
-            var canvas = document.getElementById("qrCanvas");
-            var size = 180;
-            canvas.width  = size;
-            canvas.height = size;
-            var ctx = canvas.getContext("2d");
-
-            // Generar QR usando la librería qrcodejs en un div oculto
-            var divTemp = document.createElement("div");
-            divTemp.style.display = "none";
-            document.body.appendChild(divTemp);
-
-            new QRCode(divTemp, {
-                text: URL_PAGINA,
-                width: size,
-                height: size,
-                colorDark: "#0f172a",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-
-            // Esperar a que el QR se genere y copiarlo al canvas visible
-            setTimeout(function() {
-                var imgQR = divTemp.querySelector("img");
-                if (imgQR) {
-                    var imagen = new Image();
-                    imagen.onload = function() {
-                        ctx.drawImage(imagen, 0, 0, size, size);
-                    };
-                    imagen.src = imgQR.src;
-                } else {
-                    var canvasQR = divTemp.querySelector("canvas");
-                    if (canvasQR) {
-                        ctx.drawImage(canvasQR, 0, 0, size, size);
-                    }
-                }
-                document.body.removeChild(divTemp);
-            }, 300);
-        });
-
-        function descargarQR() {
-            var canvas = document.getElementById("qrCanvas");
-            var link = document.createElement("a");
-            link.download = "cienfuegos-express-qr.png";
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-        }
-
-        // =========================================================
-        // CSV
-        // =========================================================
         const DESTINO_RESTAURANTE = "Restaurante Jota Jota, 5301 Avenida 5 de Septiembre, Cienfuegos, Cuba";
         var baseDatosDirecciones = [];
         var direccionSeleccionada = "";
@@ -182,9 +137,6 @@
             }
         });
 
-        // =========================================================
-        // UTILIDADES
-        // =========================================================
         function sinAcentos(texto) {
             return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
         }
@@ -218,9 +170,6 @@
             return puntuacion;
         }
 
-        // =========================================================
-        // GOOGLE MAPS
-        // =========================================================
         function abrirRutaGoogleMaps() {
             if (!navigator.geolocation) {
                 window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(DESTINO_RESTAURANTE), "_blank");
@@ -240,9 +189,6 @@
             );
         }
 
-        // =========================================================
-        // BUSCADOR INTELIGENTE
-        // =========================================================
         var inputBuscar       = document.getElementById("buscarDireccion");
         var listaSugerencias  = document.getElementById("listaSugerencias");
         var resultadoTarifa   = document.getElementById("resultadoTarifa");
@@ -322,9 +268,6 @@
             }
         });
 
-        // =========================================================
-        // WHATSAPP
-        // =========================================================
         function enviarPedidoWhatsApp(numero) {
             if (!direccionSeleccionada) return;
             var esDomingo = new Date().getDay() === 0;
