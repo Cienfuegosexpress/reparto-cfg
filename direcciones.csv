@@ -2160,6 +2160,8 @@ Avenida,78A,Calle,71,Calle,CIRCUNVALACION,Avenida 78A entre Calle 71 y Calle CIR
 Avenida,80,Calle,63,Calle,65,Avenida 80 entre Calle 63 y Calle 65,410,Pueblo Grifo,"3,1"
 Avenida,80,Calle,65,Calle,69,Avenida 80 entre Calle 65 y Calle 69,420,Pueblo Grifo,"3,2"
 Avenida,82,Calle,35,Calle,82A,Avenida 82 entre Calle 35 y Calle 82A,520,Pastorita,"4,2"
+Avenida,82,Calle,33,Avenida,82A,Avenida 82 entre Calle 33 y Avenida 82A,510,Pastorita,"4,1"
+Avenida,82,Calle,33,Calle,35,Avenida 82 entre Calle 33 y Calle 35,510,Pastorita,"4,1"
 Avenida,82A,Calle,82,Calle,27,Avenida 82A entre Calle 82 y Calle 27,540,Pastorita,"4,4"
 Avenida,82B,Calle,25,Calle,27,Avenida 82B entre Calle 25 y Calle 27,560,Pastorita,"4,6"
 Avenida,84,Calle,31,Calle,33A,Avenida 84 entre Calle 31 y Calle 33A,540,Pastorita,"4,4"
@@ -2225,5 +2227,47 @@ Calle,RAPIDO DEL MALECON,Calle,RAPIDO DEL MALECON,Calle,RAPIDO DEL MALECON,Calle
 Calle,PALMITA,Calle,PALMITA,Calle,PALMITA,Calle PALMITA entre Calle PALMITA y Calle PALMITA,440,Pueblo Grifo,"3,4"
 Calle,BALDOSA,Calle,BALDOSA,Calle,BALDOSA,Calle BALDOSA entre Calle BALDOSA y Calle BALDOSA,620,Pueblo Grifo,"5,2"
 Calle,GAS PUNTA GOTICA,Calle,GAS PUNTA GOTICA,Calle,GAS PUNTA GOTICA,Calle GAS PUNTA GOTICA entre Calle GAS PUNTA GOTICA y Calle GAS PUNTA GOTICA,350,Punta Gotica,"2,5"
-Calle,EDIF 22 C71,Calle,78A,Calle,80,Calle EDIF 22 C71 entre Calle 78A y Calle 80,450,Pueblo Grifo,"3,5"
-Calle,EDIF15 A28,Calle,59,Calle,61,Calle EDIF15 A28 entre Calle 59 y Calle 61,200,Reparto de los Medicos,1
+Calle,PLASTICOS ARREGLAR,Calle,PLASTICOS ARREGLAR,Calle,PLASTICOS ARREGLAR,Calle PLASTICOS ARREGLAR entre Calle PLASTICOS ARREGLAR y Calle PLASTICOS ARREGLAR,450,Pueblo Grifo,"3,5"
+Calle,PALACIO DE LOS MATRIMONIOS,Calle,PALACIO DE LOS MATRIMONIOS,Calle,PALACIO DE LOS MATRIMONIOS,Calle PALACIO DE LOS MATRIMONIOS entre Calle PALACIO DE LOS MATRIMONIOS y Calle PALACIO DE LOS MATRIMONIOS,500,Buena vista,4
+Calle,CIRCULO INFANTIL BUENA V,Calle,CIRCULO INFANTIL BUENA V,Calle,CIRCULO INFANTIL BUENA V,Calle CIRCULO INFANTIL BUENA V entre Calle CIRCULO INFANTIL BUENA V y Calle CIRCULO INFANTIL BUENA V,500,Buena vista,4
+Calle,DELEGACION DEL MININT,Calle,DELEGACION DEL MININT,Calle,DELEGACION DEL MININT,Calle DELEGACION DEL MININT entre Calle DELEGACION DEL MININT y Calle DELEGACION DEL MININT,500,Pastorita,4
+Calle,CRIS TU REY,Calle,CRIS TU REY,Calle,CRIS TU REY,Calle CRIS TU REY entre Calle CRIS TU REY y Calle CRIS TU REY,440,Buena vista,"3,4"
+Calle,EDIF 22 C 71,Avenida,78A,Avenida,80,Calle EDIF 22 C 71 entre Avenida 78A y Avenida 80,450,Pueblo Grifo,"3,5"
+Calle,EDIF 4 C 63,Avenida,78,Avenida,78A,Calle EDIF 4 C 63 entre Avenida 78 y Avenida 78A,380,Pueblo Grifo,"2,8"
+Calle,EDIF 29 A 78,Calle,65,Calle,67,Calle EDIF 29 A 78 entre Calle 65 y Calle 67,400,Pueblo Grifo,3
+Calle,EDIF 30 A 78,Calle,65,Calle,67,Calle EDIF 30 A 78 entre Calle 65 y Calle 67,400,Pueblo Grifo,3
+Calle,EDIF 31 A 78,Calle,65,Calle,67,Calle EDIF 31 A 78 entre Calle 65 y Calle 67,400,Pueblo Grifo,3
+Calle,EDIF 32 A 78,Calle,65,Calle,67,Calle EDIF 32 A 78 entre Calle 65 y Calle 67,400,Pueblo Grifo,3
+Calle,EDIF 1  C 71,Avenida,78,Avenida,78A,Calle EDIF 1  C 71 entre Avenida 78 y Avenida 78A,440,Pueblo Grifo,"3,4"
+Calle,EDIF 12 A 78A,Calle,69,Calle,71,Calle EDIF 12 A 78A entre Calle 69 y Calle 71,410,Pueblo Grifo,"3,1"
+Calle,EDIF 57 A 78,Calle,67,Calle,69,Calle EDIF 57 A 78 entre Calle 67 y Calle 69,390,Pueblo Grifo,"2,9"
+Calle,EDIF 58 A 78,Calle,67,Calle,69,Calle EDIF 58 A 78 entre Calle 67 y Calle 69,390,Pueblo Grifo,"2,9"
+Calle,EDIF 59 A 78,Calle,67,Calle,69,Calle EDIF 59 A 78 entre Calle 67 y Calle 69,390,Pueblo Grifo,"2,9"
+Calle,EDIF 49 C 81,Avenida,34,Avenida,36,Calle EDIF 49 C 81 entre Avenida 34 y Avenida 36,280,Junco Sur,"1,8"
+Calle,EDIF 50 C 81,Avenida,34,Avenida,36,Calle EDIF 50 C 81 entre Avenida 34 y Avenida 36,280,Junco Sur,"1,8"
+Calle,EDIF 52 C 81,Avenida,34,Avenida,36,Calle EDIF 52 C 81 entre Avenida 34 y Avenida 36,280,Junco Sur,"1,8"
+Calle,EDIF 54 C 81,Avenida,34,Avenida,36,Calle EDIF 54 C 81 entre Avenida 34 y Avenida 36,280,Junco Sur,"1,8"
+Calle,EDIF 21  BIOSALUDABLE,Calle,EDIF 21  BIOSALUDABLE,Calle,EDIF 21  BIOSALUDABLE,Calle EDIF 21  BIOSALUDABLE entre Calle EDIF 21  BIOSALUDABLE y Calle EDIF 21  BIOSALUDABLE,300,Junco Sur,2
+Calle,EDIF 21  MARINA,Calle,EDIF 21  MARINA,Calle,EDIF 21  MARINA,Calle EDIF 21  MARINA entre Calle EDIF 21  MARINA y Calle EDIF 21  MARINA,340,Junco Sur,"2,4"
+Calle,EDIF 18  MARINA,Calle,EDIF 18  MARINA,Calle,EDIF 18  MARINA,Calle EDIF 18  MARINA entre Calle EDIF 18  MARINA y Calle EDIF 18  MARINA,340,Junco Sur,"2,4"
+Calle,EDIF 20 MARINA,Calle,EDIF 20 MARINA,Calle,EDIF 20 MARINA,Calle EDIF 20 MARINA entre Calle EDIF 20 MARINA y Calle EDIF 20 MARINA,340,Junco Sur,"2,4"
+Calle,EDIF 4 C81,Avenida,36,Avenida,36A,Calle EDIF 4 C81 entre Avenida 36 y Avenida 36A,270,Junco Sur,"1,7"
+Calle,EDIF 5 A 36A,Calle,79A,Calle,81,Calle EDIF 5 A 36A entre Calle 79A y Calle 81,260,Junco Sur,"1,6"
+Calle,EDIF 13 A 72,Calle,97,Calle,99,Calle EDIF 13 A 72 entre Calle 97 y Calle 99,510,Buena vista,"4,1"
+Calle,EDIF 3 C 89 ,Avenida,72,Avenida,74,Calle EDIF 3 C 89  entre Avenida 72 y Avenida 74,440,Buena vista,"3,4"
+Calle,EDIF 22 C 99,Avenida,72,Avenida,74,Calle EDIF 22 C 99 entre Avenida 72 y Avenida 74,460,Buena vista,"3,6"
+Calle,EDIF G C 35,Avenida,82,Avenida,84,Calle EDIF G C 35 entre Avenida 82 y Avenida 84,510,Pastorita,"4,1"
+Calle,EDIF E C 33,Calle,33A,Avenida,84,Calle EDIF E C 33 entre Calle 33A y Avenida 84,520,Pastorita,"4,2"
+Calle,EDIF F C 33,Calle,33A,Avenida,84,Calle EDIF F C 33 entre Calle 33A y Avenida 84,520,Pastorita,"4,2"
+Calle,EDIF 10 C 29,Avenida,84A,Avenida,90,Calle EDIF 10 C 29 entre Avenida 84A y Avenida 90,530,Pastorita,"4,3"
+Calle,EDIF BLOQUE 1 A 82,Calle,35,Calle,37,Calle EDIF BLOQUE 1 A 82 entre Calle 35 y Calle 37,510,Pastorita,"4,1"
+Calle,EDIF BLOQUE 2 A 82,Calle,35,Calle,37,Calle EDIF BLOQUE 2 A 82 entre Calle 35 y Calle 37,510,Pastorita,"4,1"
+Calle,EDIF 4 REFINERIA C 31,Avenida,86,Avenida,88,Calle EDIF 4 REFINERIA C 31 entre Avenida 86 y Avenida 88,570,Pastorita,"4,7"
+Calle,MODULO A C 31,Avenida,84,Avenida,86,Calle MODULO A C 31 entre Avenida 84 y Avenida 86,560,Pastorita,"4,6"
+Calle,EDIF 8406 C 31,Avenida,84,Avenida,86,Calle EDIF 8406 C 31 entre Avenida 84 y Avenida 86,560,Pastorita,"4,6"
+Calle,EDIF 16 A 82,Calle,33,Avenida,82A,Calle EDIF 16 A 82 entre Calle 33 y Avenida 82A,510,Pastorita,"4,1"
+Calle,EDIF S A 82,Calle,33,Avenida,83A,Calle EDIF S A 82 entre Calle 33 y Avenida 83A,510,Pastorita,"4,1"
+Calle,EDIF O A 82,Calle,33,Avenida,82A,Calle EDIF O A 82 entre Calle 33 y Avenida 82A,510,Pastorita,"4,1"
+Calle,EDIF 15 A 28,Calle,59,Calle,61,Calle EDIF 15 A 28 entre Calle 59 y Calle 61,200,Reparto de los Medicos,1
+Calle,EDIF 4 C 16 NE,Calle,85,Calle,87,Calle EDIF 4 C 16 NE entre Calle 85 y Calle 87,340,Tulipan,"2,4"
+Calle,EDIF 52 A 24,Calle,59,Calle,61,Calle EDIF 52 A 24 entre Calle 59 y Calle 61,220,Punta Gorda,"1,2"
