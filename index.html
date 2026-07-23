@@ -114,6 +114,76 @@
         }
         #btnLimpiar:hover { background: #64748b; }
         #btnLimpiar.visible { display: flex; }
+
+        /* Modal de registro (mismo patrón que el modal QR, acento verde) */
+        #modalRegistro {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(2,6,23,0.8);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+        }
+        #modalRegistro.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+        #tarjetaRegistro {
+            background: linear-gradient(160deg, #1e293b, #0f172a);
+            border: 1px solid #334155;
+            border-radius: 24px;
+            padding: 28px 24px;
+            max-width: 320px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            transform: scale(0.9) translateY(16px);
+            transition: transform 0.25s;
+        }
+        #modalRegistro.visible #tarjetaRegistro {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Fila de zonas: scroll horizontal, sin barra visible */
+        #filtrosZona {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        #filtrosZona::-webkit-scrollbar { display: none; }
+        .chip-zona {
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .chip-zona.activa {
+            background: #2563eb !important;
+            color: white !important;
+            border-color: #2563eb !important;
+        }
+
+        /* Scroll de sugerencias: barra visible e indicador de que hay más */
+        #listaSugerencias {
+            scrollbar-width: thin;
+            scrollbar-color: #475569 #0f172a;
+        }
+        #listaSugerencias::-webkit-scrollbar {
+            width: 8px;
+        }
+        #listaSugerencias::-webkit-scrollbar-track {
+            background: #0f172a;
+            border-radius: 8px;
+        }
+        #listaSugerencias::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 8px;
+        }
+        #listaSugerencias::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen antialiased flex items-center justify-center p-0 sm:p-4">
@@ -121,14 +191,33 @@
     <div class="max-w-md w-full bg-slate-900 min-h-screen sm:min-h-0 sm:rounded-3xl shadow-2xl border border-slate-800 flex flex-col overflow-hidden">
 
         <header class="bg-gradient-to-b from-blue-700 to-blue-800 p-6 flex flex-col items-center text-center border-b border-blue-600 shadow-lg relative">
-            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center overflow-hidden border-4 border-slate-950 shadow-xl mb-3">
+            <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center overflow-hidden border-4 border-slate-950 shadow-xl mb-3">
                 <img src="logo.png" alt="Cienfuegos Express" class="w-full h-full object-cover" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2972/2972185.png';">
             </div>
             <h1 class="text-2xl font-black tracking-wide text-white uppercase">Cienfuegos Express</h1>
             <p class="text-xs text-blue-200 font-medium mt-1">Logística de reparto local rápido</p>
+            <p id="estadoTienda" class="text-[11px] font-semibold px-3 py-1 rounded-full mt-3 border"></p>
+            <p id="saludoCliente" class="hidden text-[11px] text-blue-100 bg-blue-900/40 px-3 py-1 rounded-full mt-2 border border-blue-500/30"></p>
         </header>
 
         <main class="p-5 flex-1 space-y-6">
+
+            <!-- REGISTRO DE CLIENTE (tarjeta compacta -> abre modal) -->
+            <div id="bloqueRegistroForm" onclick="abrirModalRegistro()" class="bg-emerald-950/20 border border-emerald-700/40 hover:border-emerald-500/60 p-4 rounded-2xl shadow-lg flex items-center justify-between gap-3 cursor-pointer transition-colors">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🧾</span>
+                    <div>
+                        <p class="font-bold text-sm text-white leading-tight">Cliente frecuente</p>
+                        <p class="text-[11px] text-slate-400 leading-tight mt-0.5">Guarda tus datos y pide más rápido</p>
+                    </div>
+                </div>
+                <span class="text-emerald-400 font-bold text-xs whitespace-nowrap">Registrarme →</span>
+            </div>
+
+            <div id="bloqueRegistroOk" class="hidden bg-emerald-950/20 border border-emerald-700/40 p-4 rounded-2xl shadow-lg flex items-center justify-between gap-3">
+                <p class="text-xs text-emerald-300">✅ Hola, <span id="nombreGuardadoTxt" class="font-bold"></span></p>
+                <button onclick="abrirModalRegistro()" class="text-[11px] text-slate-400 hover:text-white underline shrink-0 cursor-pointer">Editar</button>
+            </div>
 
             <!-- GOOGLE MAPS -->
             <div class="bg-slate-800/90 border border-slate-700 p-5 rounded-2xl shadow-xl space-y-3">
@@ -148,6 +237,9 @@
                     <span class="text-xl">🔍</span>
                     <h2 class="font-bold text-base text-white">Consulta tu dirección</h2>
                 </div>
+
+                <div id="filtrosZona" class="hidden flex gap-2 overflow-x-auto pb-1 -mx-1 px-1"></div>
+
                 <div class="space-y-2">
                     <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Escribe tu calle o avenida:</label>
 
@@ -163,7 +255,13 @@
                     <p class="text-[10px] text-slate-500">💡 Puedes escribir solo números: "36" encuentra "Calle 7 entre Avenida 36..."</p>
                 </div>
 
-                <div id="listaSugerencias" class="hidden max-h-64 overflow-y-auto bg-slate-950 border border-slate-700 rounded-xl divide-y divide-slate-800 text-sm shadow-2xl"></div>
+                <p id="contadorResultados" class="hidden text-[11px] text-slate-400"></p>
+                <div id="listaSugerencias" class="hidden max-h-80 overflow-y-auto bg-slate-950 border border-slate-700 rounded-xl divide-y divide-slate-800 text-sm shadow-2xl"></div>
+
+                <div id="sinResultados" class="hidden bg-slate-950/60 border border-slate-800 rounded-xl p-4 text-center space-y-2">
+                    <p class="text-xs text-slate-400">No encontramos esa dirección en nuestra base.</p>
+                    <button onclick="contactarDireccionManual()" class="text-xs text-blue-400 hover:text-blue-300 underline cursor-pointer">Escríbenos tu dirección directamente por WhatsApp</button>
+                </div>
 
                 <div id="resultadoTarifa" class="hidden bg-gradient-to-br from-blue-950/50 to-slate-900/50 border border-blue-500/30 p-4 rounded-xl space-y-4">
                     <div class="flex justify-between items-baseline">
@@ -230,6 +328,24 @@
         </div>
     </div>
 
+    <!-- MODAL REGISTRO CLIENTE -->
+    <div id="modalRegistro" onclick="cerrarModalRegistro(event)">
+        <div id="tarjetaRegistro">
+            <div class="flex items-center justify-between mb-1">
+                <p class="text-white font-black text-base">🧾 Regístrate</p>
+                <button onclick="cerrarModalRegistro()" class="text-slate-500 hover:text-white text-xl leading-none cursor-pointer transition-colors">✕</button>
+            </div>
+            <p class="text-slate-400 text-xs mb-4">Guardado solo en este teléfono. La próxima vez tu nombre y teléfono ya estarán listos para pedir.</p>
+            <div class="space-y-3">
+                <input type="text" id="regNombre" placeholder="Tu nombre" class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm">
+                <input type="tel" id="regTelefono" placeholder="Tu teléfono" class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm">
+                <button onclick="guardarCliente()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl transition text-sm cursor-pointer uppercase tracking-wider">
+                    Guardar mis datos
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
 
@@ -249,12 +365,93 @@
         });
 
         // =========================================================
+        // REGISTRO DE CLIENTE (guardado local en este teléfono/navegador)
+        // =========================================================
+        var CLAVE_CLIENTE = "cfe_cliente";
+
+        function cargarCliente() {
+            try {
+                var datos = JSON.parse(localStorage.getItem(CLAVE_CLIENTE) || "null");
+                return datos;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function pintarEstadoCliente() {
+            var datos = cargarCliente();
+            var tarjetaInvitar = document.getElementById("bloqueRegistroForm");
+            var tarjetaOk = document.getElementById("bloqueRegistroOk");
+            var saludo = document.getElementById("saludoCliente");
+
+            if (datos && datos.nombre) {
+                tarjetaInvitar.classList.add("hidden");
+                tarjetaOk.classList.remove("hidden");
+                document.getElementById("nombreGuardadoTxt").innerText = datos.nombre.split(" ")[0];
+                saludo.innerText = "👋 Hola de nuevo, " + datos.nombre.split(" ")[0];
+                saludo.classList.remove("hidden");
+            } else {
+                tarjetaInvitar.classList.remove("hidden");
+                tarjetaOk.classList.add("hidden");
+                saludo.classList.add("hidden");
+            }
+        }
+
+        function abrirModalRegistro() {
+            var datos = cargarCliente();
+            if (datos) {
+                document.getElementById("regNombre").value = datos.nombre || "";
+                document.getElementById("regTelefono").value = datos.telefono || "";
+            }
+            document.getElementById("modalRegistro").classList.add("visible");
+        }
+        function cerrarModalRegistro(e) {
+            if (!e || e.target === document.getElementById("modalRegistro") || e.currentTarget.tagName === "BUTTON") {
+                document.getElementById("modalRegistro").classList.remove("visible");
+            }
+        }
+
+        function guardarCliente() {
+            var nombre = document.getElementById("regNombre").value.trim();
+            var telefono = document.getElementById("regTelefono").value.trim();
+            if (!nombre || !telefono) {
+                alert("Por favor completa tu nombre y tu teléfono.");
+                return;
+            }
+            localStorage.setItem(CLAVE_CLIENTE, JSON.stringify({ nombre: nombre, telefono: telefono }));
+            pintarEstadoCliente();
+            cerrarModalRegistro();
+        }
+
+        // =========================================================
+        // HORARIO: abierto de 11:00 AM a 11:00 PM
+        // =========================================================
+        function actualizarEstadoTienda() {
+            var horaCuba = parseInt(
+                new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12: false, timeZone: "America/Havana" }).format(new Date()),
+                10
+            );
+            var abierto = horaCuba >= 11 && horaCuba < 23;
+            var el = document.getElementById("estadoTienda");
+            if (abierto) {
+                el.innerText = "🟢 Abierto ahora · Cierra a las 11:00 PM (hora Cuba)";
+                el.className = "text-[11px] font-semibold px-3 py-1 rounded-full mt-3 border bg-emerald-950/40 text-emerald-300 border-emerald-600/40";
+            } else {
+                el.innerText = "🔴 Cerrado ahora · Abre a las 11:00 AM (hora Cuba)";
+                el.className = "text-[11px] font-semibold px-3 py-1 rounded-full mt-3 border bg-red-950/40 text-red-300 border-red-600/40";
+            }
+        }
+        actualizarEstadoTienda();
+        setInterval(actualizarEstadoTienda, 60000);
+
+        // =========================================================
         // CSV
         // =========================================================
         const DESTINO_RESTAURANTE = "Restaurante Jota Jota, 5301 Avenida 5 de Septiembre, Cienfuegos, Cuba";
         var baseDatosDirecciones = [];
         var direccionSeleccionada = "";
         var precioSeleccionado = "";
+        var LIMITE_SUGERENCIAS = 25; // antes 6 - ahora se ven muchas más, con scroll dentro de la lista
 
         Papa.parse("direcciones.csv", {
             download: true,
@@ -267,8 +464,57 @@
                 } else {
                     baseDatosDirecciones = filas;
                 }
+                pintarChipsZona();
             }
         });
+
+        // =========================================================
+        // FILTRO RÁPIDO POR ZONA
+        // =========================================================
+        var zonaActiva = "";
+
+        function pintarChipsZona() {
+            var contenedor = document.getElementById("filtrosZona");
+            var zonas = [];
+            baseDatosDirecciones.forEach(function(fila) {
+                var z = (fila[8] || "").trim();
+                if (z && zonas.indexOf(z) === -1) zonas.push(z);
+            });
+            if (zonas.length === 0) return;
+
+            contenedor.innerHTML = "";
+            zonas.forEach(function(z) {
+                var chip = document.createElement("button");
+                chip.type = "button";
+                chip.className = "chip-zona text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-700 bg-slate-950 text-slate-300 hover:border-blue-500 transition-colors cursor-pointer";
+                chip.innerText = z;
+                chip.addEventListener("click", function() {
+                    if (zonaActiva === z) {
+                        zonaActiva = "";
+                        chip.classList.remove("activa");
+                        limpiarBuscador();
+                    } else {
+                        zonaActiva = z;
+                        document.querySelectorAll(".chip-zona").forEach(function(c) { c.classList.remove("activa"); });
+                        chip.classList.add("activa");
+                        mostrarDireccionesDeZona(z);
+                    }
+                });
+                contenedor.appendChild(chip);
+            });
+            contenedor.classList.remove("hidden");
+        }
+
+        function mostrarDireccionesDeZona(zona) {
+            var filas = baseDatosDirecciones.filter(function(fila) {
+                return (fila[8] || "").trim() === zona;
+            });
+            inputBuscar.value = "";
+            actualizarBtnLimpiar();
+            resultadoTarifa.classList.add("hidden");
+            sinResultados.classList.add("hidden");
+            pintarListaResultados(filas, filas.length, "Zona " + zona + " · " + filas.length + " dirección" + (filas.length === 1 ? "" : "es"));
+        }
 
         // =========================================================
         // UTILIDADES
@@ -327,13 +573,15 @@
         // =========================================================
         // BUSCADOR INTELIGENTE + BOTÓN LIMPIAR
         // =========================================================
-        var inputBuscar       = document.getElementById("buscarDireccion");
-        var btnLimpiar        = document.getElementById("btnLimpiar");
-        var listaSugerencias  = document.getElementById("listaSugerencias");
-        var resultadoTarifa   = document.getElementById("resultadoTarifa");
-        var precioTexto       = document.getElementById("precioTexto");
-        var detallesDireccion = document.getElementById("detallesDireccion");
-        var zonaTexto         = document.getElementById("zonaTexto");
+        var inputBuscar        = document.getElementById("buscarDireccion");
+        var btnLimpiar         = document.getElementById("btnLimpiar");
+        var listaSugerencias   = document.getElementById("listaSugerencias");
+        var contadorResultados = document.getElementById("contadorResultados");
+        var sinResultados      = document.getElementById("sinResultados");
+        var resultadoTarifa    = document.getElementById("resultadoTarifa");
+        var precioTexto        = document.getElementById("precioTexto");
+        var detallesDireccion  = document.getElementById("detallesDireccion");
+        var zonaTexto          = document.getElementById("zonaTexto");
 
         // Mostrar u ocultar la X según haya texto
         function actualizarBtnLimpiar() {
@@ -349,44 +597,34 @@
             inputBuscar.value = "";
             direccionSeleccionada = "";
             precioSeleccionado = "";
+            zonaActiva = "";
+            document.querySelectorAll(".chip-zona").forEach(function(c) { c.classList.remove("activa"); });
             listaSugerencias.innerHTML = "";
             listaSugerencias.classList.add("hidden");
+            contadorResultados.classList.add("hidden");
+            sinResultados.classList.add("hidden");
             resultadoTarifa.classList.add("hidden");
             btnLimpiar.classList.remove("visible");
             inputBuscar.focus();
         }
 
-        inputBuscar.addEventListener("input", function() {
-            actualizarBtnLimpiar();
-
-            var valorRaw = inputBuscar.value;
+        // Pinta una lista de filas de direcciones en la caja de sugerencias.
+        // "totalEncontradas" puede ser mayor que filas.length si se recortó con LIMITE_SUGERENCIAS.
+        function pintarListaResultados(filas, totalEncontradas, textoContador) {
             listaSugerencias.innerHTML = "";
 
-            if (valorRaw.trim().length < 1) {
+            if (totalEncontradas === 0) {
                 listaSugerencias.classList.add("hidden");
+                contadorResultados.classList.add("hidden");
+                sinResultados.classList.remove("hidden");
                 return;
             }
 
-            var tokens = tokenizar(valorRaw);
-            if (tokens.length === 0) { listaSugerencias.classList.add("hidden"); return; }
-
-            var coincidencias = baseDatosDirecciones.filter(function(fila) {
-                if (!fila[6]) return false;
-                var combinado = sinAcentos(expandirAbreviaturas(fila[6])) + " " + sinAcentos(expandirAbreviaturas(fila[10] || ""));
-                return tokens.every(function(token) { return combinado.includes(token); });
-            });
-
-            coincidencias.sort(function(a, b) {
-                return calcularPuntuacion(b, tokens) - calcularPuntuacion(a, tokens);
-            });
-
-            coincidencias = coincidencias.slice(0, 6);
-
-            if (coincidencias.length === 0) { listaSugerencias.classList.add("hidden"); return; }
-
             listaSugerencias.classList.remove("hidden");
+            contadorResultados.innerText = textoContador;
+            contadorResultados.classList.remove("hidden");
 
-            coincidencias.forEach(function(fila) {
+            filas.forEach(function(fila) {
                 var dir    = (fila[6] || "").trim();
                 var precio = (fila[7] || "0").trim();
                 var zona   = (fila[8] || "General").trim();
@@ -406,6 +644,7 @@
                     zonaTexto.innerText         = zona;
                     resultadoTarifa.classList.remove("hidden");
                     listaSugerencias.classList.add("hidden");
+                    contadorResultados.classList.add("hidden");
                     inputBuscar.value = dir;
                     actualizarBtnLimpiar();
                     resultadoTarifa.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -413,10 +652,56 @@
 
                 listaSugerencias.appendChild(btn);
             });
+        }
+
+        inputBuscar.addEventListener("input", function() {
+            actualizarBtnLimpiar();
+
+            var valorRaw = inputBuscar.value;
+            sinResultados.classList.add("hidden");
+
+            if (valorRaw.trim().length > 0) {
+                zonaActiva = "";
+                document.querySelectorAll(".chip-zona").forEach(function(c) { c.classList.remove("activa"); });
+            }
+
+            if (valorRaw.trim().length < 1) {
+                listaSugerencias.innerHTML = "";
+                listaSugerencias.classList.add("hidden");
+                contadorResultados.classList.add("hidden");
+                return;
+            }
+
+            var tokens = tokenizar(valorRaw);
+            if (tokens.length === 0) {
+                listaSugerencias.innerHTML = "";
+                listaSugerencias.classList.add("hidden");
+                contadorResultados.classList.add("hidden");
+                return;
+            }
+
+            var coincidencias = baseDatosDirecciones.filter(function(fila) {
+                if (!fila[6]) return false;
+                var combinado = sinAcentos(expandirAbreviaturas(fila[6])) + " " + sinAcentos(expandirAbreviaturas(fila[10] || ""));
+                return tokens.every(function(token) { return combinado.includes(token); });
+            });
+
+            coincidencias.sort(function(a, b) {
+                return calcularPuntuacion(b, tokens) - calcularPuntuacion(a, tokens);
+            });
+
+            var totalEncontradas = coincidencias.length;
+            var recortadas = coincidencias.slice(0, LIMITE_SUGERENCIAS);
+            var texto = totalEncontradas > recortadas.length
+                ? "Mostrando " + recortadas.length + " de " + totalEncontradas + " resultados · desliza dentro de la lista para ver más ⬇️"
+                : totalEncontradas + " resultado" + (totalEncontradas === 1 ? "" : "s") + " encontrado" + (totalEncontradas === 1 ? "" : "s");
+
+            pintarListaResultados(recortadas, totalEncontradas, texto);
         });
 
         document.addEventListener("click", function(e) {
-            if (!inputBuscar.contains(e.target) && !listaSugerencias.contains(e.target) && e.target !== btnLimpiar) {
+            var filtrosZonaEl = document.getElementById("filtrosZona");
+            if (!inputBuscar.contains(e.target) && !listaSugerencias.contains(e.target) && !filtrosZonaEl.contains(e.target) && e.target !== btnLimpiar) {
                 listaSugerencias.classList.add("hidden");
             }
         });
@@ -431,9 +716,28 @@
                 alert("Este número solo está disponible los domingos. Por favor usa el otro repartidor.");
                 return;
             }
-            var mensaje = "¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *" + direccionSeleccionada + "*\n\nTarifa calculada: *" + precioSeleccionado + "*";
+            var datosCliente = cargarCliente();
+            var lineaCliente = "";
+            if (datosCliente && datosCliente.nombre) {
+                lineaCliente = "\n👤 *" + datosCliente.nombre + "* · 📞 " + datosCliente.telefono;
+            }
+            var mensaje = "¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *" + direccionSeleccionada + "*\n\nTarifa calculada: *" + precioSeleccionado + "*" + lineaCliente;
             window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje), "_blank");
         }
+
+        function contactarDireccionManual() {
+            var datosCliente = cargarCliente();
+            var lineaCliente = "";
+            if (datosCliente && datosCliente.nombre) {
+                lineaCliente = "\n👤 *" + datosCliente.nombre + "* · 📞 " + datosCliente.telefono;
+            }
+            var texto = inputBuscar.value.trim();
+            var mensaje = "¡Hola! 🛵\n\nNo encontré mi dirección en la app. Mi dirección es:\n📍 *" + texto + "*" + lineaCliente;
+            window.open("https://wa.me/5350980360?text=" + encodeURIComponent(mensaje), "_blank");
+        }
+
+        // Al cargar la página: mostrar si ya hay un cliente registrado
+        pintarEstadoCliente();
 
     </script>
 </body>
