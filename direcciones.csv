@@ -1,4 +1,5 @@
 via,numero_de_la_via,via,cruce_1,via,cruce_2,direccion_completa,precio,zona,kilometros
+Calle,5,Avenida,40,Avenida,42,Calle 5 entre Avenida 40 y Avenida 42,440,Reina,3.4
 Calle,7,Avenida,36,Avenida,38,Calle 7 entre Avenida 36 y Avenida 38,430,Reina,3.3
 Calle,7,Avenida,38,Avenida,40,Calle 7 entre Avenida 38 y Avenida 40,420,Reina,3.2
 Calle,7,Avenida,40,Avenida,42,Calle 7 entre Avenida 40 y Avenida 42,410,Reina,3.1
@@ -1147,10 +1148,19 @@ Avenida,8,Calle,39,Calle,41,Avenida 8 entre Calle 39 y Calle 41,340,Punta Gorda,
 Avenida,10,Calle,37,Calle,39,Avenida 10 entre Calle 37 y Calle 39,340,Punta Gorda,2.4
 Avenida,10,Calle,39,Calle,41,Avenida 10 entre Calle 39 y Calle 41,330,Punta Gorda,2.3
 Avenida,10,Calle,41,Calle,43,Avenida 10 entre Calle 41 y Calle 43,330,Punta Gorda,2.3
+Avenida,10,Calle,51,Calle,53,Avenida 10 entre Calle 51 y Calle 53,290,Punta Gorda,1.9
+Avenida,10,Calle,53,Calle,55,Avenida 10 entre Calle 53 y Calle 55,300,Punta Gorda,2
+Avenida,10,Calle,55,Calle,57,Avenida 10 entre Calle 55 y Calle 57,310,Punta Gorda,2.1
+Avenida,12,Calle,51,Calle,53,Avenida 12 entre Calle 51 y Calle 53,280,Punta Gorda,1.8
+Avenida,12,Calle,53,Calle,55,Avenida 12 entre Calle 53 y Calle 55,290,Punta Gorda,1.9
+Avenida,12,Calle,55,Calle,57,Avenida 12 entre Calle 55 y Calle 57,300,Punta Gorda,2
 Avenida,12,Calle,35,Calle,37,Avenida 12 entre Calle 35 y Calle 37,340,Punta Gorda,2.4
 Avenida,12,Calle,37,Calle,39,Avenida 12 entre Calle 37 y Calle 39,330,Punta Gorda,2.3
 Avenida,12,Calle,39,Calle,41,Avenida 12 entre Calle 39 y Calle 41,330,Punta Gorda,2.3
 Avenida,12,Calle,41,Calle,43,Avenida 12 entre Calle 41 y Calle 43,320,Punta Gorda,2.2
+Avenida,14,Calle,51,Calle,53,Avenida 14 entre Calle 51 y Calle 53,270,Punta Gorda,1.7
+Avenida,14,Calle,53,Calle,55,Avenida 14 entre Calle 53 y Calle 55,280,Punta Gorda,1.8
+Avenida,14,Calle,55,Calle,57,Avenida 14 entre Calle 55 y Calle 57,290,Punta Gorda,1.9
 Avenida,14,Calle,35,Calle,37,Avenida 14 entre Calle 35 y Calle 37,330,Punta Gorda,2.3
 Avenida,14,Calle,37,Calle,39,Avenida 14 entre Calle 37 y Calle 39,320,Punta Gorda,2.2
 Avenida,14,Calle,39,Calle,41,Avenida 14 entre Calle 39 y Calle 41,310,Punta Gorda,2.1
@@ -2313,3 +2323,5 @@ Calle,EDIF 10 C8 NE,Calle,65,Calle,67,Calle EDIF 10 C8 NE entre Calle 65 y Calle
 Calle,EDIF 5902 A48,Calle,59,Calle,61,Calle EDIF 5902 A48 entre Calle 59 y Calle 61,200,La Juanita,0.9
 Calle,EDIF 5704 A32,Calle,57,Calle,59,Calle EDIF 5704 A32 entre Calle 57 y Calle 59,200,Reparto de los Medicos,0.7
 Calle,EDIF 18 CIRCUNVALACION,Avenida,74,Avenida,76,Calle EDIF 18 CIRCUNVALACION entre Avenida 74 y Avenida 76,630,Pastorita,5.3
+Calle,EDIF 24 51A,Avenida,30,Avenida,32,Calle EDIF 24 51A entre Avenida 30 y Avenida 32,200,Reparto de los Medicos,1
+Calle,EDIF 5A A78A,Calle,65,Calle,67,Calle EDIF 5A A78A entre Calle 65 y Calle 67,400,Pueblo Grifo,3
