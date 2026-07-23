@@ -239,6 +239,19 @@
                 </div>
             </section>
 
+            <!-- DIRECCIÓN NO APARECE: ESCRIBIRLA Y ENVIAR POR WHATSAPP -->
+            <section class="bg-slate-800/90 p-5 rounded-2xl border border-slate-700 space-y-3 shadow-xl">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">✍️</span>
+                    <h2 class="font-bold text-base text-white">¿No aparece tu dirección?</h2>
+                </div>
+                <p class="text-xs text-slate-400">Escríbela aquí tal como la conoces y se la mandamos directo al repartidor por WhatsApp.</p>
+                <textarea id="direccionManual" rows="2" placeholder="Escribe tu dirección aquí..." class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 text-sm resize-none"></textarea>
+                <button onclick="enviarDireccionManualWhatsApp()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-4 rounded-xl transition shadow-md text-sm cursor-pointer uppercase tracking-wider flex items-center justify-center gap-2">
+                    💬 Enviar por WhatsApp
+                </button>
+            </section>
+
         </main>
 
         <footer class="p-4 text-center text-[10px] text-slate-600 border-t border-slate-800 bg-slate-950/50">
@@ -604,6 +617,16 @@
             var detalles = document.getElementById("detallesUbicacion").value.trim();
             var lineaDetalles = detalles ? "\n\n🗣️ Referencia: *" + detalles + "*" : "";
             var mensaje = "¡Hola! 🛵\n\nNo encontré mi dirección en la app. Mi dirección es:\n📍 *" + texto + "*" + lineaDetalles;
+            window.open("https://wa.me/5350980360?text=" + encodeURIComponent(mensaje), "_blank");
+        }
+
+        function enviarDireccionManualWhatsApp() {
+            var texto = document.getElementById("direccionManual").value.trim();
+            if (!texto) {
+                alert("Por favor escribe tu dirección antes de enviar.");
+                return;
+            }
+            var mensaje = "¡Hola! 🛵\n\nMi dirección no aparece en la app. Aquí la escribo directamente:\n📍 *" + texto + "*";
             window.open("https://wa.me/5350980360?text=" + encodeURIComponent(mensaje), "_blank");
         }
 
