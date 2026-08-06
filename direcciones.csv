@@ -710,6 +710,7 @@ Calle,77,Calle,10 NE,Calle,12 NE,Calle 77 entre Calle 10 NE y Calle 12 NE,330,Tu
 Calle,77,Calle,12 NE,Calle,14 NE,Calle 77 entre Calle 12 NE y Calle 14 NE,320,Tulipan,2.2
 Calle,77,Calle,14 NE,Calle,16 NE,Calle 77 entre Calle 14 NE y Calle 16 NE,310,Tulipan,2.1
 Calle,77,Calle,16 NE,Calle,18 NE,Calle 77 entre Calle 16 NE y Calle 18 NE,300,Tulipan,2
+Calle,77,Avenida,32,Avenida,34,Calle 77 entre Avenida 32 y Avenida 34,320,Junco Sur,2.2
 Calle,79,Avenida,28,Avenida,28A,Calle 79 entre Avenida 28 y Avenida 28A,280,Junco Sur,1.8
 Calle,79,Avenida,28,Avenida,30,Calle 79 entre Avenida 28 y Avenida 30,290,Junco Sur,1.9
 Calle,79,Avenida,30,Avenida,32,Calle 79 entre Avenida 30 y Avenida 32,300,Junco Sur,2
@@ -2330,6 +2331,7 @@ Calle,EDIF 1 C45,Avenida,38,Avenida,40,Calle EDIF 1 C45 entre Avenida 38 y Aveni
 Calle,EDIF 10 C8 NE,Calle,65,Calle,67,Calle EDIF 10 C8 NE entre Calle 65 y Calle 67,260,La Juanita,1.6
 Calle,EDIF 5902 A48,Calle,59,Calle,61,Calle EDIF 5902 A48 entre Calle 59 y Calle 61,200,La Juanita,0.9
 Calle,EDIF 5704 A32,Calle,57,Calle,59,Calle EDIF 5704 A32 entre Calle 57 y Calle 59,200,Reparto de los Medicos,0.7
-Calle,EDIF 18 CIRCUNVALACION,Avenida,74,Avenida,76,Calle EDIF 18 CIRCUNVALACION entre Avenida 74 y Avenida 76,630,Pastorita,5.3
+Calle,EDIF 18 CIRCUNVALACION,Avenida,74,Avenida,76,Calle EDIF 18 CIRCUNVALACION entre Avenida 74 y Avenida 76,630,Buena vista,5.3
 Calle,EDIF 24 51A,Avenida,30,Avenida,32,Calle EDIF 24 51A entre Avenida 30 y Avenida 32,200,Reparto de los Medicos,1
 Calle,EDIF 5A A78A,Calle,65,Calle,67,Calle EDIF 5A A78A entre Calle 65 y Calle 67,400,Pueblo Grifo,3
+Calle,EDIF 28 A72,Calle,101,Calle,103,Calle EDIF 28 A72 entre Calle 101 y Calle 103,530,Buena vista,4.3
