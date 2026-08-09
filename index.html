@@ -222,6 +222,25 @@
                 </div>
             </section>
 
+            <!-- DIRECCIÓN NO APARECE: ESCRIBIRLA Y ENVIAR POR WHATSAPP -->
+            <section class="bg-slate-800/90 p-5 rounded-2xl border border-slate-700 space-y-3 shadow-xl">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">✍️</span>
+                    <h2 class="font-bold text-base text-white">¿No aparece tu dirección?</h2>
+                </div>
+                <p class="text-xs text-slate-400">Escríbela aquí tal como la conoces y se la mandamos directo al repartidor por WhatsApp.</p>
+                <textarea id="direccionManual" rows="2" placeholder="Escribe tu dirección aquí..." class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 text-sm resize-none"></textarea>
+                <div class="grid grid-cols-1 gap-3">
+                    <button onclick="enviarDireccionManualWhatsApp('5350980360')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer text-sm tracking-wide uppercase">
+                        <span>💬</span> Repartidor 1 (WhatsApp)
+                    </button>
+                    <button onclick="enviarDireccionManualWhatsApp('5363401398')" class="w-full border border-yellow-600 text-yellow-500 hover:bg-yellow-600/20 font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex flex-col items-center justify-center gap-1 cursor-pointer text-xs tracking-wide uppercase">
+                        <span class="flex items-center gap-2 font-bold text-sm">💬 Repartidor 2 (WhatsApp)</span>
+                        <span class="font-normal opacity-80">(Solo funciona los Domingos)</span>
+                    </button>
+                </div>
+            </section>
+
         </main>
 
         <footer class="p-4 text-center text-[10px] text-slate-600 border-t border-slate-800 bg-slate-950/50">
@@ -320,7 +339,8 @@
                 .replace(/\bav\b/g, "avenida")
                 .replace(/\bcll\b/g, "calle")
                 .replace(/\besq\b/g, "esquina")
-                .replace(/\bent\b/g, "entre");
+                .replace(/\bent\b/g, "entre")
+                .replace(/\bedif\b/g, "edificio");
         }
         function tokenizar(texto) {
             return sinAcentos(expandirAbreviaturas(texto))
@@ -570,6 +590,21 @@
                 return;
             }
             var mensaje = "¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *" + direccionSeleccionada + "*\n\nTarifa calculada: *" + precioSeleccionado + "*";
+            window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje), "_blank");
+        }
+
+        function enviarDireccionManualWhatsApp(numero) {
+            var texto = document.getElementById("direccionManual").value.trim();
+            if (!texto) {
+                alert("Por favor escribe tu dirección antes de enviar.");
+                return;
+            }
+            var esDomingo = new Date().getDay() === 0;
+            if (numero === "5363401398" && !esDomingo) {
+                alert("Este número solo está disponible los domingos. Por favor usa el otro repartidor.");
+                return;
+            }
+            var mensaje = "¡Hola! 🛵\n\nMi dirección no aparece en la app. Aquí la escribo directamente:\n📍 *" + texto + "*";
             window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje), "_blank");
         }
 
