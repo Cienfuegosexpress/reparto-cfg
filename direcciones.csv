@@ -2267,7 +2267,11 @@ Calle,EDIF 59 A78,Calle,67,Calle,69,Calle EDIF 59 A78 entre Calle 67 y Calle 69,
 Calle,EDIF 66B A78,Calle,65,Calle,67,Calle EDIF 66B A78 entre Calle 65 y Calle 67,380,Pueblo Grifo,2.8
 Calle,EDIF 18 C71,Avenida,78A,Avenida,80,Calle EDIF 18 C71 entre Avenida 78A y Avenida 80,450,Pueblo Grifo,3.5
 Calle,EDIF 42B A78,Calle,71,Calle,73,Calle EDIF 42B A78 entre Calle 71 y Calle 73,440,Pueblo Grifo,3.4
+Calle,EDIF 10 SALA DE VIDEO C65,Avenida,78A,Avenida,65A,Calle EDIF 10 SALA DE VIDEO C65 entre Avenida 78A y Avenida 65A,400,Pueblo Grifo,3
+Calle,EDIF 26A C65,Avenida,78,Avenida,78A,Calle EDIF 26A C65 entre Avenida 78 y Avenida 78A,380,Pueblo Grifo,2.8
+Calle,EDIF MODULO 1  C65,Avenida,78A,Avenida,65A,Calle EDIF MODULO 1  C65 entre Avenida 78A y Avenida 65A,400,Pueblo Grifo,3
 Calle,EDIF 49 C81,Avenida,34,Avenida,36,Calle EDIF 49 C81 entre Avenida 34 y Avenida 36,280,Junco Sur,1.8
+Calle,EDIF 22 LA MARINA A32,Calle,85,Calle,87,Calle EDIF 22 LA MARINA A32 entre Calle 85 y Calle 87,320,Junco Sur,2.2
 Calle,EDIF 50 C81,Avenida,34,Avenida,36,Calle EDIF 50 C81 entre Avenida 34 y Avenida 36,280,Junco Sur,1.8
 Calle,EDIF 52 C81,Avenida,34,Avenida,36,Calle EDIF 52 C81 entre Avenida 34 y Avenida 36,280,Junco Sur,1.8
 Calle,EDIF 54 C81,Avenida,34,Avenida,36,Calle EDIF 54 C81 entre Avenida 34 y Avenida 36,280,Junco Sur,1.8
@@ -2302,6 +2306,8 @@ Calle,EDIF 2 A38,Calle,79A,Calle,81,Calle EDIF 2 A38 entre Calle 79A y Calle 81,
 Calle,EDIF 3801 C81,Avenida,38,Avenida,40,Calle EDIF 3801 C81 entre Avenida 38 y Avenida 40,250,Junco Sur,1.5
 Calle,EDIF 79A01 C81,Avenida,40,Avenida,42,Calle EDIF 79A01 C81 entre Avenida 40 y Avenida 42,240,Junco Sur,1.4
 Calle,EDIF 23 A42,Calle,79A,Calle,81,Calle EDIF 23 A42 entre Calle 79A y Calle 81,220,Junco Sur,1.2
+Calle,EDIF 40 C87,Avenida,30,Avenida,32,Calle EDIF 40 C87 entre Avenida 30 y Avenida 32,340,Junco Sur,2.4
+Calle,EDIF 37 C89,Avenida,30,Avenida,32,Calle EDIF 37 C89 entre Avenida 30 y Avenida 32,350,Junco Sur,2.5
 Calle,EDIF 13 A72,Calle,97,Calle,99,Calle EDIF 13 A72 entre Calle 97 y Calle 99,510,Buena vista,4.1
 Calle,EDIF 3 C89 ,Avenida,72,Avenida,74,Calle EDIF 3 C89  entre Avenida 72 y Avenida 74,440,Buena vista,3.4
 Calle,EDIF 22 C99,Avenida,72,Avenida,74,Calle EDIF 22 C99 entre Avenida 72 y Avenida 74,460,Buena vista,3.6
@@ -2318,6 +2324,7 @@ Calle,EDIF 16 A82,Calle,33,Avenida,82A,Calle EDIF 16 A82 entre Calle 33 y Avenid
 Calle,EDIF S A82,Calle,33,Avenida,83A,Calle EDIF S A82 entre Calle 33 y Avenida 83A,510,Pastorita,4.1
 Calle,EDIF O A82,Calle,33,Avenida,82A,Calle EDIF O A82 entre Calle 33 y Avenida 82A,510,Pastorita,4.1
 Calle,EDIF 4 A82,Avenida,82A,Calle,33,Calle EDIF 4 A82 entre Avenida 82A y Calle 33,510,Pastorita,4.1
+Calle,EDIF T A82 ,Calle,33,Avenida,82A,Calle EDIF T A82  entre Calle 33 y Avenida 82A,510,Pastorita,4.1
 Calle,EDIF 15 A28,Calle,59,Calle,61,Calle EDIF 15 A28 entre Calle 59 y Calle 61,200,Reparto de los Medicos,1
 Calle,EDIF 2 C57,Avenida,40,Avenida,42,Calle EDIF 2 C57 entre Avenida 40 y Avenida 42,200,Reparto de los Medicos,0.3
 Calle,EDIF 7 A28,Calle,57,Calle,59,Calle EDIF 7 A28 entre Calle 57 y Calle 59,200,Reparto de los Medicos,0.8
