@@ -205,6 +205,7 @@
                         <span class="text-xs font-semibold text-blue-400 uppercase">Costo del Domicilio:</span>
                         <span id="precioTexto" class="font-black text-2xl text-blue-400"></span>
                     </div>
+                    <p id="precioTextoUsd" class="hidden text-right text-xs text-slate-400 -mt-3"></p>
                     <div class="text-xs text-slate-300 space-y-2 pt-2 border-t border-slate-800">
                         <p class="font-bold text-slate-200">📌 Dirección de Entrega:</p>
                         <p id="detallesDireccion" class="italic text-slate-300 bg-slate-950/60 p-2 rounded border border-slate-800"></p>
@@ -290,6 +291,7 @@
         var baseDatosDirecciones = [];
         var direccionSeleccionada = "";
         var precioSeleccionado = "";
+        var precioUsdSeleccionado = "";
         var LIMITE_SUGERENCIAS = 30; // antes se cortaba en 6 - ahora se ven muchas más, con scroll dentro de la caja
 
         Papa.parse("direcciones.csv", {
@@ -330,9 +332,8 @@
         }
         function calcularPuntuacion(fila, tokens) {
             var dir       = sinAcentos(fila[6] || "");
-            var alias     = sinAcentos(fila[10] || "");
             var zona      = sinAcentos(fila[8] || "");
-            var combinado = dir + " " + alias + " " + zona;
+            var combinado = dir + " " + zona;
             var puntuacion = 0;
             tokens.forEach(function(token) {
                 if (combinado.includes(token)) {
@@ -424,6 +425,7 @@
         var sinResultados       = document.getElementById("sinResultados");
         var resultadoTarifa     = document.getElementById("resultadoTarifa");
         var precioTexto         = document.getElementById("precioTexto");
+        var precioTextoUsd      = document.getElementById("precioTextoUsd");
         var detallesDireccion   = document.getElementById("detallesDireccion");
         var zonaTexto           = document.getElementById("zonaTexto");
 
@@ -441,6 +443,7 @@
             inputBuscar.value = "";
             direccionSeleccionada = "";
             precioSeleccionado = "";
+            precioUsdSeleccionado = "";
             zonaActiva = "";
             document.querySelectorAll(".chip-zona").forEach(function(c) { c.classList.remove("activa"); });
             listaSugerencias.innerHTML = "";
@@ -469,21 +472,26 @@
             contadorResultados.classList.remove("hidden");
 
             filas.forEach(function(fila) {
-                var dir    = (fila[6] || "").trim();
-                var precio = (fila[7] || "0").trim();
-                var zona   = (fila[8] || "General").trim();
+                var dir      = (fila[6] || "").trim();
+                var precio   = (fila[7] || "0").trim();
+                var zona     = (fila[8] || "General").trim();
+                var precioUsd = (fila[10] || "").trim();
+                var precioUsdTexto = precioUsd ? " (≈ $" + precioUsd.replace(",", ".") + " USD)" : "";
 
                 var btn = document.createElement("button");
                 btn.type = "button";
                 btn.className = "w-full text-left p-3 hover:bg-slate-800 active:bg-slate-700 transition-colors border-b border-slate-800 last:border-0 block focus:outline-none cursor-pointer";
                 btn.innerHTML =
                     '<div class="font-medium text-slate-200 text-sm">' + dir + '</div>' +
-                    '<div class="text-xs text-emerald-400 mt-0.5 font-semibold">' + precio + ' CUP &bull; ' + zona + '</div>';
+                    '<div class="text-xs text-emerald-400 mt-0.5 font-semibold">' + precio + ' CUP' + precioUsdTexto + ' &bull; ' + zona + '</div>';
 
                 btn.addEventListener("click", function() {
                     direccionSeleccionada = dir;
                     precioSeleccionado    = precio + " CUP";
+                    precioUsdSeleccionado = precioUsd ? "$" + precioUsd.replace(",", ".") + " USD" : "";
                     precioTexto.innerText       = precioSeleccionado;
+                    precioTextoUsd.innerText    = precioUsdSeleccionado;
+                    precioTextoUsd.classList.toggle("hidden", !precioUsdSeleccionado);
                     detallesDireccion.innerText = dir;
                     zonaTexto.innerText         = zona;
                     resultadoTarifa.classList.remove("hidden");
@@ -526,7 +534,7 @@
 
             var coincidencias = baseDatosDirecciones.filter(function(fila) {
                 if (!fila[6]) return false;
-                var combinado = sinAcentos(expandirAbreviaturas(fila[6])) + " " + sinAcentos(expandirAbreviaturas(fila[10] || "")) + " " + sinAcentos(fila[8] || "");
+                var combinado = sinAcentos(expandirAbreviaturas(fila[6])) + " " + sinAcentos(fila[8] || "");
                 // "todos los tokens" da resultados más precisos; si no hay ninguno con todos,
                 // se prueba con "al menos un token" para no dejar al usuario sin nada.
                 return tokens.every(function(token) { return combinado.includes(token); });
@@ -535,7 +543,7 @@
             if (coincidencias.length === 0 && tokens.length > 1) {
                 coincidencias = baseDatosDirecciones.filter(function(fila) {
                     if (!fila[6]) return false;
-                    var combinado = sinAcentos(expandirAbreviaturas(fila[6])) + " " + sinAcentos(expandirAbreviaturas(fila[10] || "")) + " " + sinAcentos(fila[8] || "");
+                    var combinado = sinAcentos(expandirAbreviaturas(fila[6])) + " " + sinAcentos(fila[8] || "");
                     return tokens.some(function(token) { return combinado.includes(token); });
                 });
             }
@@ -570,7 +578,8 @@
                 alert("Este número solo está disponible los domingos. Por favor usa el otro repartidor.");
                 return;
             }
-            var mensaje = "¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *" + direccionSeleccionada + "*\n\nTarifa calculada: *" + precioSeleccionado + "*";
+            var lineaUsd = precioUsdSeleccionado ? " (" + precioUsdSeleccionado + ")" : "";
+            var mensaje = "¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *" + direccionSeleccionada + "*\n\nTarifa calculada: *" + precioSeleccionado + lineaUsd + "*";
             window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje), "_blank");
         }
 
