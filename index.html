@@ -8,138 +8,61 @@
     <style>
         body { font-family: system-ui, -apple-system, sans-serif; }
 
-        /* Botón flotante QR */
         #btnQRFlotante {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 50;
-            width: 54px;
-            height: 54px;
-            border-radius: 50%;
+            position: fixed; bottom: 24px; right: 24px; z-index: 50;
+            width: 54px; height: 54px; border-radius: 50%;
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
             box-shadow: 0 4px 20px rgba(37,99,235,0.5);
-            border: 2px solid rgba(255,255,255,0.15);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid rgba(255,255,255,0.15); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; transition: transform 0.2s, box-shadow 0.2s;
         }
-        #btnQRFlotante:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 28px rgba(37,99,235,0.7);
-        }
+        #btnQRFlotante:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,99,235,0.7); }
         #btnQRFlotante:active { transform: scale(0.95); }
         #btnQRFlotante::before {
-            content: "Compartir";
-            position: absolute;
-            right: 62px;
-            background: rgba(15,23,42,0.95);
-            color: #94a3b8;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 20px;
-            white-space: nowrap;
-            border: 1px solid #334155;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
+            content: "Compartir"; position: absolute; right: 62px;
+            background: rgba(15,23,42,0.95); color: #94a3b8; font-size: 11px; font-weight: 600;
+            padding: 4px 10px; border-radius: 20px; white-space: nowrap; border: 1px solid #334155;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s;
         }
         #btnQRFlotante:hover::before { opacity: 1; }
 
-        /* Modal overlay */
         #modalQR {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            background: rgba(2,6,23,0.8);
-            backdrop-filter: blur(6px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s;
+            position: fixed; inset: 0; z-index: 100;
+            background: rgba(2,6,23,0.8); backdrop-filter: blur(6px);
+            display: flex; align-items: center; justify-content: center; padding: 24px;
+            opacity: 0; pointer-events: none; transition: opacity 0.25s;
         }
-        #modalQR.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
+        #modalQR.visible { opacity: 1; pointer-events: all; }
         #tarjetaQR {
-            background: linear-gradient(160deg, #1e293b, #0f172a);
-            border: 1px solid #334155;
-            border-radius: 24px;
-            padding: 28px 24px;
-            max-width: 300px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-            transform: scale(0.9) translateY(16px);
-            transition: transform 0.25s;
+            background: linear-gradient(160deg, #1e293b, #0f172a); border: 1px solid #334155;
+            border-radius: 24px; padding: 28px 24px; max-width: 300px; width: 100%;
+            text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            transform: scale(0.9) translateY(16px); transition: transform 0.25s;
         }
-        #modalQR.visible #tarjetaQR {
-            transform: scale(1) translateY(0);
-        }
+        #modalQR.visible #tarjetaQR { transform: scale(1) translateY(0); }
 
-        /* Contenedor del input con la X */
-        .input-wrapper {
-            position: relative;
-        }
-        .input-wrapper input {
-            padding-right: 2.5rem; /* espacio para la X */
-        }
+        .input-wrapper { position: relative; }
+        .input-wrapper input { padding-right: 2.5rem; }
         #btnLimpiar {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: #475569;
-            color: #e2e8f0;
-            font-size: 13px;
-            line-height: 1;
-            display: none; /* oculto por defecto */
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: none;
-            transition: background 0.15s;
-            flex-shrink: 0;
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            width: 22px; height: 22px; border-radius: 50%; background: #475569; color: #e2e8f0;
+            font-size: 13px; line-height: 1; display: none; align-items: center; justify-content: center;
+            cursor: pointer; border: none; transition: background 0.15s; flex-shrink: 0;
         }
         #btnLimpiar:hover { background: #64748b; }
         #btnLimpiar.visible { display: flex; }
 
-        /* Scroll de sugerencias: barra visible e indicador de que hay más */
-        #listaSugerencias {
-            scrollbar-width: thin;
-            scrollbar-color: #475569 #0f172a;
-        }
+        #listaSugerencias { scrollbar-width: thin; scrollbar-color: #475569 #0f172a; }
         #listaSugerencias::-webkit-scrollbar { width: 8px; }
         #listaSugerencias::-webkit-scrollbar-track { background: #0f172a; border-radius: 8px; }
         #listaSugerencias::-webkit-scrollbar-thumb { background: #475569; border-radius: 8px; }
         #listaSugerencias::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-        /* Fila de repartos/zonas: scroll horizontal, sin barra visible */
-        #filtrosZona {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
+        #filtrosZona { scrollbar-width: none; -ms-overflow-style: none; }
         #filtrosZona::-webkit-scrollbar { display: none; }
-        .chip-zona {
-            flex-shrink: 0;
-            white-space: nowrap;
-        }
-        .chip-zona.activa {
-            background: #2563eb !important;
-            color: white !important;
-            border-color: #2563eb !important;
-        }
+        .chip-zona { flex-shrink: 0; white-space: nowrap; }
+        .chip-zona.activa { background: #2563eb !important; color: white !important; border-color: #2563eb !important; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen antialiased flex items-center justify-center p-0 sm:p-4">
@@ -181,16 +104,15 @@
                 <div class="space-y-2">
                     <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Escribe tu calle o avenida:</label>
 
-                    <!-- Input con botón X dentro -->
                     <div class="input-wrapper">
                         <input type="text" id="buscarDireccion"
-                               placeholder="Ej: 36, calle 7, av 62..."
-                               autocomplete="on"
+                               placeholder="Ej: edi, ca, av, 36..."
+                               autocomplete="off"
                                class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm shadow-inner">
                         <button id="btnLimpiar" onclick="limpiarBuscador()" title="Borrar">✕</button>
                     </div>
 
-                    <p class="text-[10px] text-slate-500">💡 Puedes escribir solo números: "36" encuentra "Calle 7 entre Avenida 36..."</p>
+                    <p class="text-[10px] text-slate-500">💡 No hace falta escribir completo: "edi" muestra edificios, "ca" calles, "av" avenidas, o escribe un número como "36".</p>
                 </div>
 
                 <p id="contadorResultados" class="hidden text-[11px] text-slate-400"></p>
@@ -210,6 +132,24 @@
                         <p class="font-bold text-slate-200">📌 Dirección de Entrega:</p>
                         <p id="detallesDireccion" class="italic text-slate-300 bg-slate-950/60 p-2 rounded border border-slate-800"></p>
                         <p class="pt-1">📍 <span class="font-semibold text-slate-400">Zona:</span> <span id="zonaTexto" class="text-blue-400 font-bold"></span></p>
+                        <div class="grid grid-cols-2 gap-2 pt-2">
+                            <div class="bg-slate-950/60 border border-slate-800 rounded p-2">
+                                <p class="text-[10px] text-slate-500 uppercase">Vía</p>
+                                <p id="detVia" class="text-slate-200 font-semibold"></p>
+                            </div>
+                            <div class="bg-slate-950/60 border border-slate-800 rounded p-2">
+                                <p class="text-[10px] text-slate-500 uppercase">Distancia</p>
+                                <p id="detKm" class="text-slate-200 font-semibold"></p>
+                            </div>
+                            <div class="bg-slate-950/60 border border-slate-800 rounded p-2">
+                                <p class="text-[10px] text-slate-500 uppercase">Cruce 1</p>
+                                <p id="detCruce1" class="text-slate-200 font-semibold"></p>
+                            </div>
+                            <div class="bg-slate-950/60 border border-slate-800 rounded p-2">
+                                <p class="text-[10px] text-slate-500 uppercase">Cruce 2</p>
+                                <p id="detCruce2" class="text-slate-200 font-semibold"></p>
+                            </div>
+                        </div>
                     </div>
                     <div class="grid grid-cols-1 gap-3 pt-2">
                         <button onclick="enviarPedidoWhatsApp('5350980360')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer text-sm tracking-wide uppercase">
@@ -232,9 +172,7 @@
     </div>
 
     <!-- BOTÓN FLOTANTE QR -->
-    <button id="btnQRFlotante" onclick="abrirModalQR()" title="Compartir página">
-        📲
-    </button>
+    <button id="btnQRFlotante" onclick="abrirModalQR()" title="Compartir página">📲</button>
 
     <!-- MODAL QR -->
     <div id="modalQR" onclick="cerrarModalQR(event)">
@@ -250,16 +188,13 @@
                 <div class="bg-white p-3 rounded-2xl shadow-xl inline-block">
                     <img
                         src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fcienfuegosexpress.github.io%2Freparto-cfg%2F&color=0f172a&bgcolor=ffffff&qzone=1&format=png"
-                        alt="QR Cienfuegos Express"
-                        width="200" height="200"
-                        style="display:block; border-radius:6px;">
+                        alt="QR Cienfuegos Express" width="200" height="200" style="display:block; border-radius:6px;">
                 </div>
             </div>
             <p class="text-[10px] text-slate-500 font-mono mb-4 break-all">cienfuegosexpress.github.io/reparto-cfg/</p>
             <a
                 href="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https%3A%2F%2Fcienfuegosexpress.github.io%2Freparto-cfg%2F&color=0f172a&bgcolor=ffffff&qzone=2&format=png"
-                download="cienfuegos-express-qr.png"
-                target="_blank"
+                download="cienfuegos-express-qr.png" target="_blank"
                 class="block w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl transition-all text-sm text-center no-underline">
                 ⬇️ Descargar QR
             </a>
@@ -285,14 +220,21 @@
         });
 
         // =========================================================
-        // CSV
+        // DATOS
+        // Columnas del CSV: 0 via | 1 numero | 2 via | 3 cruce_1 | 4 via | 5 cruce_2
+        //                   6 direccion_completa | 7 precio | 8 zona | 9 kilometros | 10 USD
         // =========================================================
         const DESTINO_RESTAURANTE = "Restaurante Jota Jota, 5301 Avenida 5 de Septiembre, Cienfuegos, Cuba";
         var baseDatosDirecciones = [];
         var direccionSeleccionada = "";
         var precioSeleccionado = "";
         var precioUsdSeleccionado = "";
-        var LIMITE_SUGERENCIAS = 30; // antes se cortaba en 6 - ahora se ven muchas más, con scroll dentro de la caja
+        var kmSeleccionado = "";
+        var LIMITE_INICIAL = 40;   // cuántas direcciones se muestran de entrada
+        var PASO_VER_MAS = 40;     // cuántas más aparecen al pulsar "Ver más"
+        var filasActuales = [];
+        var tituloActual = "";
+        var limiteActual = LIMITE_INICIAL;
 
         Papa.parse("direcciones.csv", {
             download: true,
@@ -305,44 +247,80 @@
                 } else {
                     baseDatosDirecciones = filas;
                 }
+
+                try {
+                    // Unifica zonas escritas distinto (Buena Vista / Buena vista / "Pueblo Grifo ")
+                    var mapaZonas = {};
+                    baseDatosDirecciones.forEach(function(f) {
+                        var z = (f[8] || "").trim();
+                        var k = "z_" + sinAcentos(z);
+                        if (!mapaZonas[k]) mapaZonas[k] = z;
+                        f[8] = mapaZonas[k];
+                        // Palabras de cada fila, preparadas una sola vez para que la búsqueda sea rápida
+                        f._d = tokenizar(f[6] || "");
+                        f._z = tokenizar(f[8] || "");
+                    });
+                } catch (err) {
+                    console.error("Error preparando datos:", err);
+                }
+
+                // Las burbujas de repartos se pintan siempre, pase lo que pase arriba
                 pintarChipsZona();
+            },
+            error: function(err) {
+                console.error("No se pudo cargar direcciones.csv:", err);
+                var caja = document.getElementById("filtrosZona");
+                caja.innerHTML = '<p class="text-xs text-red-400">No se pudo cargar direcciones.csv. Revisa que esté en la misma carpeta que index.html.</p>';
+                caja.classList.remove("hidden");
             }
         });
 
         // =========================================================
-        // UTILIDADES DE BÚSQUEDA (más flexible: acentos, abreviaturas, orden de palabras)
+        // UTILIDADES DE BÚSQUEDA
         // =========================================================
         function sinAcentos(texto) {
             return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
         }
         function expandirAbreviaturas(texto) {
             return texto
+                .toLowerCase()
                 .replace(/\bave?\b/g, "avenida")
-                .replace(/\bca\b/g, "calle")
                 .replace(/\bav\b/g, "avenida")
+                .replace(/\bca\b/g, "calle")
                 .replace(/\bcll\b/g, "calle")
                 .replace(/\besq\b/g, "esquina")
                 .replace(/\bent\b/g, "entre")
-                .replace(/\bedif\b/g, "edificio");
+                .replace(/\bedif?\b/g, "edificio");
         }
         function tokenizar(texto) {
             return sinAcentos(expandirAbreviaturas(texto))
                 .split(/[\s,.\-\/]+/)
                 .filter(function(t) { return t.length > 0; });
         }
+
+        // Un token coincide si es el COMIENZO de alguna palabra: "edi" -> "edificio", "ca" -> "calle"
+        function indicePalabra(palabras, token) {
+            for (var i = 0; i < palabras.length; i++) {
+                if (palabras[i].indexOf(token) === 0) return i;
+            }
+            return -1;
+        }
+        function coincideToken(fila, token) {
+            return indicePalabra(fila._d, token) >= 0 || indicePalabra(fila._z, token) >= 0;
+        }
         function calcularPuntuacion(fila, tokens) {
-            var dir       = sinAcentos(fila[6] || "");
-            var zona      = sinAcentos(fila[8] || "");
-            var combinado = dir + " " + zona;
-            var puntuacion = 0;
-            tokens.forEach(function(token) {
-                if (combinado.includes(token)) {
-                    puntuacion += 2;
-                    if (dir.startsWith(token)) puntuacion += 3;
-                    if (new RegExp("\\b" + token + "\\b").test(combinado)) puntuacion += 1;
+            var p = 0;
+            tokens.forEach(function(t) {
+                var i = indicePalabra(fila._d, t);
+                if (i >= 0) {
+                    p += 3;
+                    if (fila._d[i] === t) p += 2;   // palabra exacta ("36" antes que "360")
+                    if (i === 0) p += 1;            // empieza la dirección
+                } else if (indicePalabra(fila._z, t) >= 0) {
+                    p += 1;                          // coincide solo con el reparto
                 }
             });
-            return puntuacion;
+            return p;
         }
 
         // =========================================================
@@ -365,6 +343,25 @@
                     window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(DESTINO_RESTAURANTE), "_blank");
                 }
             );
+        }
+
+        // =========================================================
+        // ELEMENTOS
+        // =========================================================
+        var inputBuscar         = document.getElementById("buscarDireccion");
+        var btnLimpiar          = document.getElementById("btnLimpiar");
+        var listaSugerencias    = document.getElementById("listaSugerencias");
+        var contadorResultados  = document.getElementById("contadorResultados");
+        var sinResultados       = document.getElementById("sinResultados");
+        var resultadoTarifa     = document.getElementById("resultadoTarifa");
+        var precioTexto         = document.getElementById("precioTexto");
+        var precioTextoUsd      = document.getElementById("precioTextoUsd");
+        var detallesDireccion   = document.getElementById("detallesDireccion");
+        var zonaTexto           = document.getElementById("zonaTexto");
+
+        function setTexto(id, valor) {
+            var el = document.getElementById(id);
+            if (el) el.innerText = valor;
         }
 
         // =========================================================
@@ -412,39 +409,24 @@
             actualizarBtnLimpiar();
             resultadoTarifa.classList.add("hidden");
             sinResultados.classList.add("hidden");
-            pintarListaResultados(filas, filas.length, "Reparto " + zona + " · " + filas.length + " dirección" + (filas.length === 1 ? "" : "es"));
+            mostrarLista(filas, "Reparto " + zona);
         }
 
         // =========================================================
-        // BUSCADOR INTELIGENTE + BOTÓN LIMPIAR
+        // BOTÓN LIMPIAR
         // =========================================================
-        var inputBuscar         = document.getElementById("buscarDireccion");
-        var btnLimpiar          = document.getElementById("btnLimpiar");
-        var listaSugerencias    = document.getElementById("listaSugerencias");
-        var contadorResultados  = document.getElementById("contadorResultados");
-        var sinResultados       = document.getElementById("sinResultados");
-        var resultadoTarifa     = document.getElementById("resultadoTarifa");
-        var precioTexto         = document.getElementById("precioTexto");
-        var precioTextoUsd      = document.getElementById("precioTextoUsd");
-        var detallesDireccion   = document.getElementById("detallesDireccion");
-        var zonaTexto           = document.getElementById("zonaTexto");
-
-        // Mostrar u ocultar la X según haya texto
         function actualizarBtnLimpiar() {
-            if (inputBuscar.value.length > 0) {
-                btnLimpiar.classList.add("visible");
-            } else {
-                btnLimpiar.classList.remove("visible");
-            }
+            btnLimpiar.classList.toggle("visible", inputBuscar.value.length > 0);
         }
 
-        // Limpiar todo: input, sugerencias y resultado
         function limpiarBuscador() {
             inputBuscar.value = "";
             direccionSeleccionada = "";
             precioSeleccionado = "";
             precioUsdSeleccionado = "";
+            kmSeleccionado = "";
             zonaActiva = "";
+            filasActuales = [];
             document.querySelectorAll(".chip-zona").forEach(function(c) { c.classList.remove("activa"); });
             listaSugerencias.innerHTML = "";
             listaSugerencias.classList.add("hidden");
@@ -455,45 +437,73 @@
             inputBuscar.focus();
         }
 
-        // Pinta una lista de filas de direcciones en la caja de sugerencias (reutilizable
-        // tanto para la búsqueda por texto como para el filtro por reparto/zona).
-        function pintarListaResultados(filas, totalEncontradas, textoContador) {
+        // =========================================================
+        // LISTA DE RESULTADOS (dirección + precio CUP + precio USD + km + reparto)
+        // =========================================================
+        function mostrarLista(filas, titulo) {
+            filasActuales = filas;
+            tituloActual = titulo;
+            limiteActual = LIMITE_INICIAL;
+            dibujarLista();
+        }
+
+        function dibujarLista() {
+            var total = filasActuales.length;
             listaSugerencias.innerHTML = "";
 
-            if (totalEncontradas === 0) {
+            if (total === 0) {
                 listaSugerencias.classList.add("hidden");
                 contadorResultados.classList.add("hidden");
                 sinResultados.classList.remove("hidden");
                 return;
             }
 
+            var visibles = filasActuales.slice(0, limiteActual);
+            var texto = total > visibles.length
+                ? "Mostrando " + visibles.length + " de " + total + " resultados"
+                : total + " resultado" + (total === 1 ? "" : "s");
+            if (tituloActual) texto = tituloActual + " · " + texto;
+
             listaSugerencias.classList.remove("hidden");
-            contadorResultados.innerText = textoContador;
+            contadorResultados.innerText = texto;
             contadorResultados.classList.remove("hidden");
 
-            filas.forEach(function(fila) {
-                var dir      = (fila[6] || "").trim();
-                var precio   = (fila[7] || "0").trim();
-                var zona     = (fila[8] || "General").trim();
-                var precioUsd = (fila[10] || "").trim();
-                var precioUsdTexto = precioUsd ? " (≈ $" + precioUsd.replace(",", ".") + " USD)" : "";
+            visibles.forEach(function(fila) {
+                var dir    = (fila[6] || "").trim();
+                var precio = (fila[7] || "0").trim();
+                var zona   = (fila[8] || "General").trim();
+                var km     = (fila[9] || "").trim();
+                var usd    = (fila[10] || "").trim();
+
+                var usdTxt = usd ? "$" + usd.replace(",", ".") + " USD" : "";
+                var kmTxt  = km ? km + " km" : "";
 
                 var btn = document.createElement("button");
                 btn.type = "button";
-                btn.className = "w-full text-left p-3 hover:bg-slate-800 active:bg-slate-700 transition-colors border-b border-slate-800 last:border-0 block focus:outline-none cursor-pointer";
+                btn.className = "w-full text-left p-3 hover:bg-slate-800 active:bg-slate-700 transition-colors block focus:outline-none cursor-pointer";
                 btn.innerHTML =
                     '<div class="font-medium text-slate-200 text-sm">' + dir + '</div>' +
-                    '<div class="text-xs text-emerald-400 mt-0.5 font-semibold">' + precio + ' CUP' + precioUsdTexto + ' &bull; ' + zona + '</div>';
+                    '<div class="flex flex-wrap items-center gap-1.5 mt-1.5">' +
+                        '<span class="text-xs font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 rounded-md px-2 py-0.5">' + precio + ' CUP</span>' +
+                        (usdTxt ? '<span class="text-xs font-bold text-sky-300 bg-sky-950/60 border border-sky-800/60 rounded-md px-2 py-0.5">' + usdTxt + '</span>' : '') +
+                        (kmTxt ? '<span class="text-xs font-semibold text-amber-300 bg-amber-950/40 border border-amber-800/50 rounded-md px-2 py-0.5">📏 ' + kmTxt + '</span>' : '') +
+                        '<span class="text-[11px] text-slate-500 ml-auto">' + zona + '</span>' +
+                    '</div>';
 
                 btn.addEventListener("click", function() {
                     direccionSeleccionada = dir;
                     precioSeleccionado    = precio + " CUP";
-                    precioUsdSeleccionado = precioUsd ? "$" + precioUsd.replace(",", ".") + " USD" : "";
+                    precioUsdSeleccionado = usdTxt;
+                    kmSeleccionado        = kmTxt;
                     precioTexto.innerText       = precioSeleccionado;
                     precioTextoUsd.innerText    = precioUsdSeleccionado;
                     precioTextoUsd.classList.toggle("hidden", !precioUsdSeleccionado);
                     detallesDireccion.innerText = dir;
                     zonaTexto.innerText         = zona;
+                    setTexto("detVia",    ((fila[0] || "") + " " + (fila[1] || "")).trim());
+                    setTexto("detKm",     kmTxt || "—");
+                    setTexto("detCruce1", ((fila[2] || "") + " " + (fila[3] || "")).trim());
+                    setTexto("detCruce2", ((fila[4] || "") + " " + (fila[5] || "")).trim());
                     resultadoTarifa.classList.remove("hidden");
                     listaSugerencias.classList.add("hidden");
                     contadorResultados.classList.add("hidden");
@@ -504,8 +514,27 @@
 
                 listaSugerencias.appendChild(btn);
             });
+
+            // Botón "Ver más" al final de la lista
+            if (total > visibles.length) {
+                var mas = document.createElement("button");
+                mas.type = "button";
+                mas.className = "w-full p-3 text-center text-xs font-bold text-blue-400 hover:bg-slate-800 transition-colors cursor-pointer";
+                mas.innerText = "⬇️ Ver más (" + (total - visibles.length) + " restantes)";
+                mas.addEventListener("click", function(e) {
+                    e.stopPropagation(); // evita que el clic cierre la lista
+                    var scrollAnterior = listaSugerencias.scrollTop;
+                    limiteActual += PASO_VER_MAS;
+                    dibujarLista();
+                    listaSugerencias.scrollTop = scrollAnterior;
+                });
+                listaSugerencias.appendChild(mas);
+            }
         }
 
+        // =========================================================
+        // BUSCADOR INTELIGENTE (por comienzo de palabra)
+        // =========================================================
         inputBuscar.addEventListener("input", function() {
             actualizarBtnLimpiar();
 
@@ -517,13 +546,6 @@
                 document.querySelectorAll(".chip-zona").forEach(function(c) { c.classList.remove("activa"); });
             }
 
-            if (valorRaw.trim().length < 1) {
-                listaSugerencias.innerHTML = "";
-                listaSugerencias.classList.add("hidden");
-                contadorResultados.classList.add("hidden");
-                return;
-            }
-
             var tokens = tokenizar(valorRaw);
             if (tokens.length === 0) {
                 listaSugerencias.innerHTML = "";
@@ -532,19 +554,15 @@
                 return;
             }
 
+            // Primero: filas que cumplen TODAS las palabras escritas
             var coincidencias = baseDatosDirecciones.filter(function(fila) {
-                if (!fila[6]) return false;
-                var combinado = sinAcentos(expandirAbreviaturas(fila[6])) + " " + sinAcentos(fila[8] || "");
-                // "todos los tokens" da resultados más precisos; si no hay ninguno con todos,
-                // se prueba con "al menos un token" para no dejar al usuario sin nada.
-                return tokens.every(function(token) { return combinado.includes(token); });
+                return fila._d && tokens.every(function(t) { return coincideToken(fila, t); });
             });
 
+            // Si no hay ninguna y se escribió más de una palabra, se prueba con AL MENOS una
             if (coincidencias.length === 0 && tokens.length > 1) {
                 coincidencias = baseDatosDirecciones.filter(function(fila) {
-                    if (!fila[6]) return false;
-                    var combinado = sinAcentos(expandirAbreviaturas(fila[6])) + " " + sinAcentos(fila[8] || "");
-                    return tokens.some(function(token) { return combinado.includes(token); });
+                    return fila._d && tokens.some(function(t) { return coincideToken(fila, t); });
                 });
             }
 
@@ -552,13 +570,7 @@
                 return calcularPuntuacion(b, tokens) - calcularPuntuacion(a, tokens);
             });
 
-            var totalEncontradas = coincidencias.length;
-            var recortadas = coincidencias.slice(0, LIMITE_SUGERENCIAS);
-            var texto = totalEncontradas > recortadas.length
-                ? "Mostrando " + recortadas.length + " de " + totalEncontradas + " resultados · desliza dentro de la lista para ver más ⬇️"
-                : totalEncontradas + " resultado" + (totalEncontradas === 1 ? "" : "s") + " encontrado" + (totalEncontradas === 1 ? "" : "s");
-
-            pintarListaResultados(recortadas, totalEncontradas, texto);
+            mostrarLista(coincidencias, "");
         });
 
         document.addEventListener("click", function(e) {
@@ -579,7 +591,8 @@
                 return;
             }
             var lineaUsd = precioUsdSeleccionado ? " (" + precioUsdSeleccionado + ")" : "";
-            var mensaje = "¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *" + direccionSeleccionada + "*\n\nTarifa calculada: *" + precioSeleccionado + lineaUsd + "*";
+            var lineaKm  = kmSeleccionado ? "\nDistancia: *" + kmSeleccionado + "*" : "";
+            var mensaje = "¡Hola! 🛵\n\nQuiero solicitar un servicio de domicilio a la siguiente dirección:\n📍 *" + direccionSeleccionada + "*\n\nTarifa calculada: *" + precioSeleccionado + lineaUsd + "*" + lineaKm;
             window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje), "_blank");
         }
 
