@@ -1226,6 +1226,7 @@ Avenida,24,Calle,53,Calle,57,Avenida 24 entre Calle 53 y Calle 57,233,Punta Gord
 Avenida,24,Calle,57,Calle,59,Avenida 24 entre Calle 57 y Calle 59,233,Punta Gorda,1.1,0.32,740
 Avenida,24,Calle,59,Calle,61,Avenida 24 entre Calle 59 y Calle 61,244,Punta Gorda,1.2,0.33,740
 Avenida,24A,Calle,53,Calle,57,Avenida 24A entre Calle 53 y Calle 57,222,Punta Gorda,1,0.30,740
+Avenida,24A,Calle,55,Calle,57,Avenida 24A entre Calle 55 y Calle 57,233,Punta Gorda,1.1,0.32,740
 Avenida,26,Calle,37,Calle,39,Avenida 26 entre Calle 37 y Calle 39,300,Punta Gorda,1.7,0.41,740
 Avenida,26,Calle,39,Calle,41,Avenida 26 entre Calle 39 y Calle 41,289,Punta Gorda,1.6,0.39,740
 Avenida,26,Calle,41,Calle,43,Avenida 26 entre Calle 41 y Calle 43,278,Punta Gorda,1.5,0.38,740
@@ -1865,6 +1866,7 @@ Calle,2 NE,Calle,59,Calle,61,Calle 2 NE entre Calle 59 y Calle 61,311,Casco Hist
 Calle,2 NE,Calle,61,Calle,63,Calle 2 NE entre Calle 61 y Calle 63,311,La Juanita,1.8,0.42,740
 Calle,2 NE,Calle,83,Calle,85,Calle 2 NE entre Calle 83 y Calle 85,466,Tulipan,3.2,0.63,740
 Calle,2 NE,Calle,85,Calle,87,Calle 2 NE entre Calle 85 y Calle 87,466,Tulipan,3.2,0.63,740
+Calle,2 NE,Calle,87,Calle,89,Calle 2 NE entre Calle 87 y Calle 89,477,Tulipan,3.3,0.65,740
 Calle,4 NE,Calle,47,Calle,49,Calle 4 NE entre Calle 47 y Calle 49,255,Casco Historico,1.3,0.35,740
 Calle,4 NE,Calle,49,Calle,51,Calle 4 NE entre Calle 49 y Calle 51,255,Casco Historico,1.3,0.35,740
 Calle,4 NE,Calle,51,Calle,53,Calle 4 NE entre Calle 51 y Calle 53,266,Casco Historico,1.4,0.36,740
