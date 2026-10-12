@@ -1,5 +1,7 @@
 via,numero_de_la_via,via,cruce_1,via,cruce_2,direccion_completa,precio,zona,kilometros,USD,
+Calle,5,Avenida,38,Avenida,40,Calle 5 entre Avenida 38 y Avenida 40,511,Reina,3.6,0.69,740
 Calle,5,Avenida,40,Avenida,42,Calle 5 entre Avenida 40 y Avenida 42,488,Reina,3.4,0.66,740
+Calle,5,Avenida,42,Avenida,44,Calle 5 entre Avenida 42 y Avenida 44,455,Reina,3.1,0.62,740
 Calle,7,Avenida,36,Avenida,38,Calle 7 entre Avenida 36 y Avenida 38,477,Reina,3.3,0.65,740
 Calle,7,Avenida,38,Avenida,40,Calle 7 entre Avenida 38 y Avenida 40,466,Reina,3.2,0.63,740
 Calle,7,Avenida,40,Avenida,42,Calle 7 entre Avenida 40 y Avenida 42,455,Reina,3.1,0.62,740
@@ -32,6 +34,9 @@ Calle,11,Avenida,44,Avenida,46,Calle 11 entre Avenida 44 y Avenida 46,400,Reina,
 Calle,11,Avenida,46,Avenida,48,Calle 11 entre Avenida 46 y Avenida 48,389,Reina,2.5,0.53,740
 Calle,11,Avenida,48,Avenida,50,Calle 11 entre Avenida 48 y Avenida 50,389,Reina,2.5,0.53,740
 Calle,11,Avenida,50,Avenida,52,Calle 11 entre Avenida 50 y Avenida 52,400,Reina,2.6,0.54,740
+Calle,11,Avenida,52,Avenida,54,Calle 11 entre Avenida 52 y Avenida 54,433,Reina,2.9,0.59,740
+Calle,11,Avenida,54,Avenida,56,Calle 11 entre Avenida 54 y Avenida 56,455,Reina,3.1,0.62,740
+Calle,11,Avenida,56,Avenida,58,Calle 11 entre Avenida 56 y Avenida 58,466,Reina,3.2,0.63,740
 Calle,13,Avenida,42,Avenida,44,Calle 13 entre Avenida 42 y Avenida 44,400,Reina,2.6,0.54,740
 Calle,13,Avenida,44,Avenida,46,Calle 13 entre Avenida 44 y Avenida 46,389,Reina,2.5,0.53,740
 Calle,13,Avenida,46,Avenida,48,Calle 13 entre Avenida 46 y Avenida 48,377,Reina,2.4,0.51,740
@@ -42,6 +47,7 @@ Calle,15,Avenida,46,Avenida,48,Calle 15 entre Avenida 46 y Avenida 48,366,Reina,
 Calle,15,Avenida,48,Avenida,50,Calle 15 entre Avenida 48 y Avenida 50,366,Reina,2.3,0.50,740
 Calle,15,Avenida,50,Avenida,52,Calle 15 entre Avenida 50 y Avenida 52,377,Reina,2.4,0.51,740
 Calle,15,Avenida,52,Avenida,54,Calle 15 entre Avenida 52 y Avenida 54,389,Reina,2.5,0.53,740
+Calle,15,Avenida,54,Avenida,56,Calle 15 entre Avenida 54 y Avenida 56,400,Reina,2.6,0.54,740
 Calle,17,Avenida,44,Avenida,46,Calle 17 entre Avenida 44 y Avenida 46,355,Reina,2.2,0.48,740
 Calle,17,Avenida,46,Avenida,48,Calle 17 entre Avenida 46 y Avenida 48,344,Reina,2.1,0.47,740
 Calle,17,Avenida,48,Avenida,50,Calle 17 entre Avenida 48 y Avenida 50,344,Reina,2.1,0.47,740
@@ -135,6 +141,7 @@ Calle,33,Avenida,66,Avenida,68,Calle 33 entre Avenida 66 y Avenida 68,377,Punta 
 Calle,33,Avenida,68,Avenida,70,Calle 33 entre Avenida 68 y Avenida 70,389,Punta Gotica,2.5,0.53,740
 Calle,33,Avenida,70,Avenida,72,Calle 33 entre Avenida 70 y Avenida 72,400,Punta Gotica,2.6,0.54,740
 Calle,33,Avenida,72,Avenida,74,Calle 33 entre Avenida 72 y Avenida 74,411,Punta Gotica,2.7,0.56,740
+Calle,33,Avenida,74,Avenida,76,Calle 33 entre Avenida 74 y Avenida 76,422,Punta Gotica,2.8,0.57,740
 Calle,33A,Calle,33,Avenida,84,Calle 33A entre Calle 33 y Avenida 84,588,Pastorita,4.3,0.80,740
 Calle,33A,Avenida,84,Avenida,86,Calle 33A entre Avenida 84 y Avenida 86,611,Pastorita,4.5,0.83,740
 Calle,33A,Avenida,86,Avenida,88,Calle 33A entre Avenida 86 y Avenida 88,611,Pastorita,4.5,0.83,740
@@ -538,6 +545,7 @@ Calle,61,Calle,4 NE,Calle,6 NE,Calle 61 entre Calle 4 NE y Calle 6 NE,289,La Jua
 Calle,61,Calle,6 NE,Calle,8 NE,Calle 61 entre Calle 6 NE y Calle 8 NE,300,La Juanita,1.7,0.41,740
 Calle,61,Avenida,64,Calle,2 NE,Calle 61 entre Avenida 64 y Calle 2 NE,311,La Juanita,1.8,0.42,740
 Calle,61,Avenida,64,Avenida,66,Calle 61 entre Avenida 64 y Avenida 66,322,Pueblo Grifo ,1.9,0.44,740
+Calle,61,Avenida,66,Avenida,68,Calle 61 entre Avenida 66 y Avenida 68,333,Pueblo Grifo ,2,0.45,740
 Calle,61,Avenida,68,Avenida,70,Calle 61 entre Avenida 68 y Avenida 70,355,Pueblo Grifo ,2.2,0.48,740
 Calle,61,Avenida,70,Avenida,72,Calle 61 entre Avenida 70 y Avenida 72,366,Pueblo Grifo ,2.3,0.50,740
 Calle,63,Avenida,12,Avenida,14,Calle 63 entre Avenida 12 y Avenida 14,322,Pueblo Grifo ,1.9,0.44,740
@@ -2330,6 +2338,7 @@ Calle,EDIF S A82,Calle,33,Avenida,83A,Calle EDIF S A82 entre Calle 33 y Avenida 
 Calle,EDIF O A82,Calle,33,Avenida,82A,Calle EDIF O A82 entre Calle 33 y Avenida 82A,566,Pastorita,4.1,0.77,740
 Calle,EDIF 4 A82,Avenida,82A,Calle,33,Calle EDIF 4 A82 entre Avenida 82A y Calle 33,566,Pastorita,4.1,0.77,740
 Calle,EDIF T A82 ,Calle,33,Avenida,82A,Calle EDIF T A82  entre Calle 33 y Avenida 82A,566,Pastorita,4.1,0.77,740
+Calle,EDIF FAR C35,Avenida,82,Avenida,84,Calle EDIF FAR C35 entre Avenida 82 y Avenida 84,566,Pastorita,4.1,0.77,740
 Calle,EDIF 15 A28,Calle,59,Calle,61,Calle EDIF 15 A28 entre Calle 59 y Calle 61,222,Reparto de los Medicos,1,0.30,740
 Calle,EDIF 2 C57,Avenida,40,Avenida,42,Calle EDIF 2 C57 entre Avenida 40 y Avenida 42,222,Reparto de los Medicos,0.3,0.30,740
 Calle,EDIF 7 A28,Calle,57,Calle,59,Calle EDIF 7 A28 entre Calle 57 y Calle 59,222,Reparto de los Medicos,0.8,0.30,740
